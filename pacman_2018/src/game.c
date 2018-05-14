@@ -43,19 +43,23 @@ void game_tick(PacmanGame *game)
 			break;
 		case GamePlayState:
 			// everyone can move and this is the standard 'play' game mode
-			process_player(game);
-			process_fruit(game);
-			process_pellets(game);
+			if(game->pacman.livesLeft>=0){
+				process_player(game);
+				process_pellets(game);
+			}
 
-			if(game->multiMode){
+			process_fruit(game);
+
+			if(game->multiMode && game->pacman2.livesLeft>=0){
 				process_player2(game);
 				process_pellets2(game);
-				process_fruit2(game);
+				//process_fruit2(game);
 			}
 
 			process_ghosts(game);
 
-			if (game->pacman.score > game->highscore) game->highscore = game->pacman.score;//TODO:PLAYER2 SCORE
+			if (game->pacman.score > game->highscore) game->highscore = game->pacman.score;
+			else game->highscore = game->pacman2.score;//TODO:PLAYER2 SCORE
 
 			break;
 		case WinState:
@@ -111,13 +115,37 @@ void game_tick(PacmanGame *game)
 
 			break;
 		case GamePlayState:
-
 			//TODO: remove this hacks
-			if (key_held(SDLK_k)) enter_state(game, DeathState);
+			if(!game->multiMode){
+				if (key_held(SDLK_k)) enter_state(game, DeathState);
 
-			else if (allPelletsEaten) enter_state(game, WinState);
-			else if (collidedWithGhost) enter_state(game, DeathState);
-			else if (game->multiMode && collidedWithGhost2) enter_state(game, DeathState); //todo : we will make player2's deathstate
+				else if (allPelletsEaten) enter_state(game, WinState);
+				else if (collidedWithGhost) enter_state(game, DeathState);
+			}
+			else{
+				if (key_held(SDLK_k)) enter_state(game, DeathState);
+				else if (allPelletsEaten) enter_state(game, WinState);
+				else if (collidedWithGhost){//
+					if(game->pacman.livesLeft>0){
+						pacman_location_init_player1(&game->pacman);
+					}else{
+
+					}
+					game->pacman.livesLeft--;
+					//unsigned deathdt = ticks_game();
+					//draw_pacman_death(&game->pacman, 1500 - 1000);
+				}
+				else if (collidedWithGhost2){
+					pacman_location_init_player2(&game->pacman2);
+					game->pacman2.livesLeft--;
+					//unsigned dt;
+					//printf("%d\n", dt);
+					//draw_pacman_death(&game->pacman2, deathdt - 1000);
+				}
+				else if(game->pacman.livesLeft<=0 && game->pacman2.livesLeft<=0){
+					enter_state(game, DeathState);
+				}
+			}
 
 			break;
 		case WinState:
@@ -128,7 +156,7 @@ void game_tick(PacmanGame *game)
 		case DeathState:
 			if (dt > 4000)
 			{
-				if (lives == 0) enter_state(game, GameoverState);
+				if (lives <= 0) enter_state(game, GameoverState);
 				else enter_state(game, LevelBeginState);
 			}
 
@@ -202,9 +230,10 @@ void game_render(PacmanGame *game)
 			if (game->gameFruit4.eaten && ticks_game() - game->gameFruit4.eatenAt < 2000) draw_fruit_pts(&game->gameFruit4);
 			if (game->gameFruit5.eaten && ticks_game() - game->gameFruit5.eatenAt < 2000) draw_fruit_pts(&game->gameFruit5);
 
-
-			draw_pacman(&game->pacman);
-			if(game->multiMode){
+			if(game->pacman.livesLeft>=0){
+				draw_pacman(&game->pacman);
+			}
+			if(game->multiMode && game->pacman2.livesLeft>=0){
 				draw_pacman(&game->pacman2);
 			}
 
@@ -271,6 +300,7 @@ void game_render(PacmanGame *game)
 			else
 			{
 				//draw the death animation
+				//printf("%d\n", dt);
 				draw_pacman_death(&game->pacman, dt - 1000);
 			}
 
@@ -913,9 +943,30 @@ void pacdeath_init(PacmanGame *game)
 	reset_fruit(&game->gameFruit3, &game->board);
 	reset_fruit(&game->gameFruit4, &game->board);
 	reset_fruit(&game->gameFruit5, &game->board);
-
+}
+/*
+void pacdeath_init_multi_Player1(PacmanGame *game)
+{
+	if(!game->multiMode){
+		pacman_level_init(&game->pacman);
+	}
+	else
+	{
+		pacman_level_init_multimode(&game->pacman, &game->pacman2);
+	}
 }
 
+void pacdeath_init_multi_Player2(PacmanGame *game)
+{
+	if(!game->multiMode){
+		pacman_level_init(&game->pacman);
+	}
+	else
+	{
+		pacman_level_init_multimode(&game->pacman, &game->pacman2);
+	}
+}
+*/
 //TODO: make this method based on a state, not a conditional
 //or make the menu system the same. Just make it consistant
 bool is_game_over(PacmanGame *game)
