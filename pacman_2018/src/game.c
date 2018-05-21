@@ -46,6 +46,10 @@ void game_tick(PacmanGame *game)
 			process_item(game);
 			process_fruit(game);
 			process_pellets(game);
+			if(game->pacman.bulletOn==true)
+			{
+				process_bullet(game);
+			}
 
 			if (game->pacman.score > game->highscore) game->highscore = game->pacman.score;
 
@@ -629,6 +633,11 @@ static void process_item(PacmanGame *game)
 			item->eatenAt = ticks_game();
 			Bullet_item(game);
 		}
+		if(i==0&&game->pacman.bulletsLeft==0)
+		{
+			game->pacman.bulletOn=false;
+		}
+
 		//LowVelocity
 		if (i==1&&item->itemMode == Displaying_I && collides_obj(&pac->body, item->x, item->y))
 		{
@@ -753,8 +762,10 @@ void level_init(PacmanGame *game)
 	reset_fruit(&game->gameFruit5, &game->board);
 
 	//reset item
-
 	item_init(game->item,&game->board);
+
+	//bullet
+	//bullet_init(game->bullet);
 
 }
 
@@ -811,8 +822,23 @@ static bool resolve_telesquare(PhysicsBody *body)
 
 void Bullet_item(PacmanGame *game)
 {
+	game->pacman.bulletOn=true;
+	game->pacman.bulletsLeft=5;
+}
+
+void process_bullet(PacmanGame* game)
+{
 
 }
+
+void bullet_init(Item_bullet* bullet,PacmanGame* game)
+{
+	bullet->body =game->pacman.body;
+	bullet->body.velocity = 140;
+
+	bullet->isDead = false;
+}
+
 
 void LowVelocity_item(PacmanGame *game)
 {

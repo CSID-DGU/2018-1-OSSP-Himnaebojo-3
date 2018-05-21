@@ -9,33 +9,6 @@
 #include "fps.h"
 
 
-/*Item item_for_level(int level)
-{
-	if (level < 1)
-	{
-		printf("invalid level: %d\n", level);
-		printf("aborting\n");
-		exit(1);
-	}
-
-	switch (level)
-	{
-		case 1:           return Bullet;
-		case 2:           return LowVelocity;
-		case 3: 			 return Bullet;
-		case 4: 			 return LowVelocity;
-		case 5:			 return Bullet;
-		case 6: 			 return LowVelocity;
-		case 7:  			 return Bullet;
-		case 8:  			 return LowVelocity;
-		case 9: 			 return Bullet;
-		case 10: 			 return LowVelocity;
-		case 11:			 return Bullet;
-		case 12:			 return LowVelocity;
-		default:          return Bullet;
-	}
-}*/
-//기존의 reset_item을 item_init으로 대체해야 함.
 void item_init(GameItem gameitem[2],Board* board)
 {
 	gameitem[0].item = Bullet;
@@ -85,3 +58,4 @@ int rand_item_visible_time(void)
 	// guarenteed to be random
 	return 15000;
 }
+

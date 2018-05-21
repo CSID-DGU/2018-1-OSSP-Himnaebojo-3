@@ -75,8 +75,11 @@ SDL_Surface *ghostPoints[4];
 //
 SDL_Surface *pacman;
 SDL_Surface *pacman2;
+SDL_Surface *pacman3;
+SDL_Surface *bullet;
 SDL_Surface *aniPacman[4][3];
 SDL_Surface *aniPacmanBoost[4][3];
+SDL_Surface *aniPacmanBullet[4][3];
 SDL_Surface *deathPacman[11];
 SDL_Surface *pacmanLifeIcon;
 
@@ -209,6 +212,7 @@ void load_pacman_images(void)
 {
 	pacman = load_image(DIR ENTITIES_DIR PAC_DIR "pacman.png");
 	pacman2 = load_image(DIR ENTITIES_DIR PAC_DIR "pacman2.png");
+	pacman3=load_image(DIR ENTITIES_DIR PAC_DIR "pacman3.png");
 
 	pacmanLifeIcon = load_image(DIR ENTITIES_DIR PAC_DIR "pac_life_icon.png");
 
@@ -245,6 +249,23 @@ void load_pacman_images(void)
 	aniPacmanBoost[3][1] = load_image(DIR ENTITIES_DIR PAC_DIR "d12.png");
 	aniPacmanBoost[3][2] = aniPacmanBoost[3][0];
 
+	//Bullet
+	aniPacmanBullet[0][0] = load_image(DIR ENTITIES_DIR PAC_DIR "l03.png");
+	aniPacmanBullet[0][1] = load_image(DIR ENTITIES_DIR PAC_DIR "l13.png");
+	aniPacmanBullet[0][2] = aniPacmanBullet[0][0];
+
+	aniPacmanBullet[1][0] = load_image(DIR ENTITIES_DIR PAC_DIR "u03.png");
+	aniPacmanBullet[1][1] = load_image(DIR ENTITIES_DIR PAC_DIR "u13.png");
+	aniPacmanBullet[1][2] = aniPacmanBullet[1][0];
+
+	aniPacmanBullet[2][0] = load_image(DIR ENTITIES_DIR PAC_DIR "r03.png");
+	aniPacmanBullet[2][1] = load_image(DIR ENTITIES_DIR PAC_DIR "r13.png");
+	aniPacmanBullet[2][2] = aniPacmanBullet[2][0];
+
+	aniPacmanBullet[3][0] = load_image(DIR ENTITIES_DIR PAC_DIR "d03.png");
+	aniPacmanBullet[3][1] = load_image(DIR ENTITIES_DIR PAC_DIR "d13.png");
+	aniPacmanBullet[3][2] = aniPacmanBullet[3][0];
+
 
 	char dirStr[256];
 
@@ -260,6 +281,7 @@ void dispose_pacman_images(void)
 {
 	SDL_FreeSurface(pacman);
 	SDL_FreeSurface(pacman2);
+	SDL_FreeSurface(pacman3);
 
 	SDL_FreeSurface(pacmanLifeIcon);
 
@@ -288,6 +310,20 @@ void dispose_pacman_images(void)
 
 	SDL_FreeSurface(aniPacmanBoost[3][0]);
 	SDL_FreeSurface(aniPacmanBoost[3][1]);
+
+	//Bullet
+
+	SDL_FreeSurface(aniPacmanBullet[0][0]);
+	SDL_FreeSurface(aniPacmanBullet[0][1]);
+
+	SDL_FreeSurface(aniPacmanBullet[1][0]);
+	SDL_FreeSurface(aniPacmanBullet[1][1]);
+
+	SDL_FreeSurface(aniPacmanBullet[2][0]);
+	SDL_FreeSurface(aniPacmanBullet[2][1]);
+
+	SDL_FreeSurface(aniPacmanBullet[3][0]);
+	SDL_FreeSurface(aniPacmanBullet[3][1]);
 
 	for (int i = 0; i < 11; i++)
 	{
@@ -640,6 +676,13 @@ SDL_Surface* pacman_image(void)
 	return pacman;
 }
 
+SDL_Surface* bullet_image(void)
+{
+	bullet = load_image(DIR "bullet.png");
+	return bullet;
+}
+
+
 SDL_Surface *pacman_ani_image(Direction dir, int frame)
 {
 	if (frame < 0 || frame > 4)
@@ -680,6 +723,29 @@ SDL_Surface *pacman_ani_boost_image(Direction dir, int frame)
 		case Up:    return aniPacmanBoost[1][frame - 1];
 		case Right: return aniPacmanBoost[2][frame - 1];
 		case Down:  return aniPacmanBoost[3][frame - 1];
+	}
+
+	printf("incorrect enum value\naborting\n");
+	exit(1);
+}
+
+SDL_Surface *pacman_ani_bullet_image(Direction dir, int frame)
+{
+	if (frame < 0 || frame > 4)
+	{
+		printf("invalid pacman frame: %d\n", frame);
+		printf("aborting\n");
+		exit(1);
+	}
+
+	if (frame == 0) return pacman3;
+
+	switch(dir)
+	{
+		case Left:  return aniPacmanBullet[0][frame - 1];
+		case Up:    return aniPacmanBullet[1][frame - 1];
+		case Right: return aniPacmanBullet[2][frame - 1];
+		case Down:  return aniPacmanBullet[3][frame - 1];
 	}
 
 	printf("incorrect enum value\naborting\n");

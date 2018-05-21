@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 #include "board.h"
+#include "physics.h"
 
 #define NUM_ITEM 2
 
@@ -34,6 +35,17 @@ typedef struct
 	bool eaten;               // if the fruit was eaten while it displayed
 	unsigned int eatenAt;     // the time it was eaten (used for displaying the points gained)
 } GameItem;
+
+//총알 구조체
+typedef struct
+{
+	PhysicsBody body;
+	int targetX;
+	int targetY;
+	Direction transDirection; //direction bullet should face for middle of current tile to middle of next tile
+	Direction nextDirection;  //direction bullet should face when reaching the center of the next tilea
+	int isDead; // 0 = false, 1 = true, 2 = rebirth
+} Item_bullet;
 
 
 //Returns the fruit that should be displayed for the given level.

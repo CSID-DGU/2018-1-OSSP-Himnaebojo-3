@@ -339,10 +339,20 @@ void draw_pacman(Pacman *pacman)
 	int xOffset = pacman->body.xOffset - 4;
 	int yOffset = offset + pacman->body.yOffset - 4;
 
-	if(!pacman->boostOn) {
-		draw_image_coord_offset(pacman_ani_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
-	} else {
-		draw_image_coord_offset(pacman_ani_boost_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
+
+	if(!pacman->boostOn)
+	{
+		if(pacman->bulletOn)//일반 + bullet모드
+			draw_image_coord_offset(pacman_ani_bullet_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
+		else//일반모드
+			draw_image_coord_offset(pacman_ani_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
+	}
+	else
+	{
+		if(pacman->bulletOn)//boost + bullet모드
+			draw_image_coord_offset(pacman_ani_bullet_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
+		else//boost모드
+			draw_image_coord_offset(pacman_ani_boost_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
 	}
 }
 

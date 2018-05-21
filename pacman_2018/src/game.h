@@ -39,6 +39,7 @@ typedef struct
 	PelletHolder pelletHolder;
 	GameFruit gameFruit1, gameFruit2, gameFruit3, gameFruit4, gameFruit5;
 	GameItem item[2];
+	Item_bullet bullet;
 	int highscore;
 	int currentLevel;
 } PacmanGame;
@@ -65,5 +66,7 @@ void pacdeath_init(PacmanGame *game);
 int int_length(int num);
 
 void Bullet_item(PacmanGame *game);
+void bullet_init(Item_bullet* bullet,PacmanGame* game);
+void process_bullet(PacmanGame* game);
 
 void LowVelocity_item(PacmanGame *game);
