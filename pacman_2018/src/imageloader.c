@@ -13,6 +13,7 @@
 #define PEN_DIR "pen/"
 
 #define FRUIT_DIR "fruit/"
+#define ITEM_DIR "item/"
 
 #define ENTITIES_DIR "entities/"
 
@@ -109,12 +110,17 @@ SDL_Surface *galaxianImage;
 SDL_Surface *bellImage;
 SDL_Surface *keyImage;
 
+//item images
+SDL_Surface *bulletImage;
+SDL_Surface *lowvelocityImage;
+
 void load_board_images(void);
 void load_pacman_images(void);
 void load_ghost_images(void);
 void load_misc_images(void);
 void load_char_images(void);
 void load_fruit_images(void);
+void load_item_images(void);
 
 void dispose_board_images(void);
 void dispose_pacman_images(void);
@@ -122,6 +128,7 @@ void dispose_ghost_images(void);
 void dispose_misc_images(void);
 void dispose_char_images(void);
 void dispose_fruit_images(void);
+void dispose_item_images(void);
 
 void load_images(void)
 {
@@ -131,6 +138,7 @@ void load_images(void)
 	load_misc_images();
 	load_char_images();
 	load_fruit_images();
+	load_item_images();
 }
 
 void dispose_images(void)
@@ -140,6 +148,7 @@ void dispose_images(void)
 	dispose_misc_images();
 	dispose_char_images();
 	dispose_fruit_images();
+	dispose_item_images();
 }
 
 void load_diags(SDL_Surface *images[4], const char *file)
@@ -377,6 +386,18 @@ void dispose_fruit_images(void)
 	SDL_FreeSurface(galaxianImage);
 	SDL_FreeSurface(bellImage);
 	SDL_FreeSurface(keyImage);
+}
+
+void load_item_images(void)
+{
+	bulletImage=load_image(DIR ITEM_DIR "Bullet.png");
+	lowvelocityImage=load_image(DIR ITEM_DIR "LowVelocity.png");
+}
+
+void dispose_item_images(void)
+{
+	SDL_FreeSurface(bulletImage);
+	SDL_FreeSurface(lowvelocityImage);
 }
 
 void load_misc_images(void)
@@ -739,6 +760,17 @@ SDL_Surface* get_fruit_image(Fruit fruit)
 		case Key:        return keyImage;
 	}
 
+	printf("incorrect enum value\naborting\n");
+	exit(1);
+}
+
+SDL_Surface* get_item_image(Item item)
+{
+	switch(item)
+	{
+	case Bullet:			return bulletImage;
+	case LowVelocity:		return lowvelocityImage;
+	}
 	printf("incorrect enum value\naborting\n");
 	exit(1);
 }

@@ -245,6 +245,15 @@ void draw_fruit_game(int currentLevel, GameFruit *gameFruit)
 	draw_image_coord_offset(image, gameFruit->x, gameFruit->y + 2, -5, 8);
 }
 
+void draw_item_game(GameItem* gameItem)
+{
+	//Item item=item_for_level(currentLevel);
+	Item item=gameItem->item;
+	SDL_Surface* image=get_item_image(item);
+
+	draw_image_coord_offset(image,gameItem->x,gameItem->y+2,-5,8);
+}
+
 //
 //
 // Pellet renderering
