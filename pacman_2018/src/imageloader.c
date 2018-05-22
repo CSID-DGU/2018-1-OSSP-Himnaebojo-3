@@ -76,7 +76,6 @@ SDL_Surface *ghostPoints[4];
 SDL_Surface *pacman;
 SDL_Surface *pacman2;
 SDL_Surface *pacman3;
-SDL_Surface *item_bullet;
 SDL_Surface *aniPacman[4][3];
 SDL_Surface *aniPacmanBoost[4][3];
 SDL_Surface *aniPacmanBullet[4][3];
@@ -114,8 +113,9 @@ SDL_Surface *bellImage;
 SDL_Surface *keyImage;
 
 //item images
-SDL_Surface *bulletImage;
+SDL_Surface *bulletImage;//총알아이템 이미지
 SDL_Surface *lowvelocityImage;
+SDL_Surface *item_bullet;//총알이미지
 
 void load_board_images(void);
 void load_pacman_images(void);
@@ -331,6 +331,8 @@ void dispose_pacman_images(void)
 	}
 }
 
+
+
 const char *red_dir = DIR ENTITIES_DIR GHOST_DIR RED_DIR;
 const char *pink_dir = DIR ENTITIES_DIR GHOST_DIR PINK_DIR;
 const char *cyan_dir = DIR ENTITIES_DIR GHOST_DIR CYAN_DIR;
@@ -428,12 +430,14 @@ void load_item_images(void)
 {
 	bulletImage=load_image(DIR ITEM_DIR "Bullet.png");
 	lowvelocityImage=load_image(DIR ITEM_DIR "LowVelocity.png");
+	item_bullet=load_image(DIR "item_bullet.png");
 }
 
 void dispose_item_images(void)
 {
 	SDL_FreeSurface(bulletImage);
 	SDL_FreeSurface(lowvelocityImage);
+	SDL_FreeSurface(item_bullet);
 }
 
 void load_misc_images(void)
@@ -676,11 +680,6 @@ SDL_Surface* pacman_image(void)
 	return pacman;
 }
 
-SDL_Surface* bullet_image(void)
-{
-	return item_bullet;
-}
-
 
 SDL_Surface *pacman_ani_image(Direction dir, int frame)
 {
@@ -829,7 +828,7 @@ SDL_Surface* get_fruit_image(Fruit fruit)
 	exit(1);
 }
 
-SDL_Surface* get_item_image(Item item)
+SDL_Surface* get_item_image(Item item)//총알아이템이미지
 {
 	switch(item)
 	{
@@ -840,9 +839,9 @@ SDL_Surface* get_item_image(Item item)
 	exit(1);
 }
 
-SDL_Surface* get_bullet_image(Item_bullet bullet)
+SDL_Surface* get_bullet_image()//총알이미지
 {
-	return bullet_image;
+	return item_bullet;
 }
 
 
