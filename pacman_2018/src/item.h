@@ -40,6 +40,7 @@ typedef struct
 typedef struct
 {
 	PhysicsBody body;
+	bool bullet_displaying;
 } Item_bullet;
 
 

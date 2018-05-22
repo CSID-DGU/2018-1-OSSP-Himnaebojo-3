@@ -360,8 +360,6 @@ void draw_pacman(Pacman *pacman)
 // bulet rendering
 void draw_bullet(Item_bullet* bullet)
 {
-	//SDL_Surface* image=get_bullet_image(bullet);
-
 	draw_image_coord_offset(get_bullet_image(),bullet->body.x,bullet->body.y+2,-5,8);
 }
 

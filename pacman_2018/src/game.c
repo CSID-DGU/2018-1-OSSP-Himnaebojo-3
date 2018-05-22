@@ -46,10 +46,12 @@ void game_tick(PacmanGame *game)
 			process_item(game);
 			process_fruit(game);
 			process_pellets(game);
-			if(game->pacman.bulletOn==true)
+
+			if(game->pacman.bulletOn==true&&game->bullet.bullet_displaying==true)
 			{
 				process_bullet(game);
 			}
+
 
 			if (game->pacman.score > game->highscore) game->highscore = game->pacman.score;
 
@@ -199,8 +201,8 @@ void game_render(PacmanGame *game)
 
 			draw_pacman(&game->pacman);
 
-			draw_bullet(&game->bullet);
-
+			if(game->bullet.bullet_displaying==true)
+				draw_bullet(&game->bullet);
 
 			if(game->pacman.godMode == false)
 			{
@@ -733,10 +735,12 @@ static bool check_pacghost_collision(PacmanGame *game)
 		}
 		*/
 
-		if (collides(&game->pacman.body, &g->body)) {
+		if (collides(&game->pacman.body, &g->body))
+		{
 			if(game->pacman.godMode == false)
 				return true;
-			else {
+			else
+			{
 				if(g->isDead == 2) {return true;}
 				g->isDead = 1;
 				death_send(g);
@@ -849,14 +853,19 @@ void process_bullet(PacmanGame* game)
 	{
 		game->bullet.body.nextDir = game->bullet.body.curDir;
 	}
+	for(int i=0;i<4;i++)
+	{
+		if (game->bullet.bullet_displaying == true && collides(&game->ghosts[i].body,&game->bullet.body))
+			game->bullet.bullet_displaying=false;
+	}
 }
 
 void bullet_init(Item_bullet* bullet,PacmanGame* game)
 {
 	bullet->body =game->pacman.body;
-	bullet->body.velocity = 140;
+	bullet->body.velocity = 200;
+	bullet->bullet_displaying=true;
 }
-
 
 void LowVelocity_item(PacmanGame *game)
 {
