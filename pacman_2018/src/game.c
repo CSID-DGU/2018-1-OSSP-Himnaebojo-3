@@ -21,6 +21,7 @@ static void process_item(PacmanGame *game);
 static void process_ghosts(PacmanGame *game);
 static void process_pellets(PacmanGame *game);
 
+
 static bool check_pacghost_collision(PacmanGame *game);     //return true if pacman collided with any ghosts
 static void enter_state(PacmanGame *game, GameState state); //transitions to/ from a state
 static bool resolve_telesquare(PhysicsBody *body);          //wraps the body around if they've gone tele square
@@ -653,7 +654,7 @@ static void process_item(PacmanGame *game)
 			game->pacman.bulletOn=true;
 			game->pacman.bulletsLeft=5;
 		}
-		if(i==0&&game->pacman.bulletsLeft==0)
+		if(i==0&&game->pacman.bulletsLeft==0&&game->bullet.bullet_displaying==false)
 		{
 			game->pacman.bulletOn=false;
 		}
@@ -853,10 +854,15 @@ void process_bullet(PacmanGame* game)
 	{
 		game->bullet.body.nextDir = game->bullet.body.curDir;
 	}
+
 	for(int i=0;i<4;i++)
 	{
 		if (game->bullet.bullet_displaying == true && collides(&game->ghosts[i].body,&game->bullet.body))
 			game->bullet.bullet_displaying=false;
+	}
+	if(!is_valid_square(&game->board,game->bullet.body.x,game->bullet.body.y))
+	{
+		game->bullet.bullet_displaying=false;
 	}
 }
 
