@@ -40,11 +40,6 @@ typedef struct
 typedef struct
 {
 	PhysicsBody body;
-	int targetX;
-	int targetY;
-	Direction transDirection; //direction bullet should face for middle of current tile to middle of next tile
-	Direction nextDirection;  //direction bullet should face when reaching the center of the next tilea
-	int isDead; // 0 = false, 1 = true, 2 = rebirth
 } Item_bullet;
 
 

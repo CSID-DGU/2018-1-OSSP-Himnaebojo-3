@@ -63,7 +63,12 @@ void draw_game_gameover(void);
 void draw_fruit_indicators(int currentLevel);
 void draw_fruit_game(int currentLevel, GameFruit *gameFruit);
 
+// item rendering
 void draw_item_game(GameItem* gameItem);
+
+// bullet rendering
+void draw_bullet(Item_bullet* bullet);
+
 
 //
 // Pellet renderering

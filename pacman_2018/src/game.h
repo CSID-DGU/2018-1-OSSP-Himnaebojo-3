@@ -65,7 +65,6 @@ void pacdeath_init(PacmanGame *game);
 //Returns the length of the given integer.
 int int_length(int num);
 
-void Bullet_item(PacmanGame *game);
 void bullet_init(Item_bullet* bullet,PacmanGame* game);
 void process_bullet(PacmanGame* game);
 

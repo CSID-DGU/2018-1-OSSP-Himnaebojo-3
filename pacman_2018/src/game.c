@@ -199,29 +199,45 @@ void game_render(PacmanGame *game)
 
 			draw_pacman(&game->pacman);
 
-			if(game->pacman.godMode == false) {
-				for (int i = 0; i < 4; i++) {
-					if(game->ghosts[i].isDead == 1) {
+			draw_bullet(&game->bullet);
+
+
+			if(game->pacman.godMode == false)
+			{
+				for (int i = 0; i < 4; i++)
+				{
+					if(game->ghosts[i].isDead == 1)
+					{
 						draw_eyes(&game->ghosts[i]);
 					} else
 						draw_ghost(&game->ghosts[i]);
 				}
 
-			} else {
-				if(godChange == false) {
+			}
+			else
+			{
+				if(godChange == false)
+				{
 					game->pacman.originDt = ticks_game();
 					godChange = true;
 				}
 				godDt = ticks_game() - game->pacman.originDt;
-				for (int i = 0; i < 4; i++) {
-					if(game->ghosts[i].isDead == 1) {
+				for (int i = 0; i < 4; i++)
+				{
+					if(game->ghosts[i].isDead == 1)
+					{
 						draw_eyes(&game->ghosts[i]);
-					} else if(draw_scared_ghost(&game->ghosts[i], godDt)){
+					}
+					else if(draw_scared_ghost(&game->ghosts[i], godDt))
+					{
 						// nothing
-						if(game->ghosts[i].isDead == 2) {
+						if(game->ghosts[i].isDead == 2)
+						{
 							draw_ghost(&game->ghosts[i]);
 						}
-					} else {
+					}
+					else
+					{
 						game->pacman.godMode = false;
 						godChange = false;
 						if(game->ghosts[i].isDead == 2)
@@ -631,7 +647,9 @@ static void process_item(PacmanGame *game)
 			item->itemMode = Displayed_I;
 			item->eaten = true;
 			item->eatenAt = ticks_game();
-			Bullet_item(game);
+
+			game->pacman.bulletOn=true;
+			game->pacman.bulletsLeft=5;
 		}
 		if(i==0&&game->pacman.bulletsLeft==0)
 		{
@@ -644,6 +662,7 @@ static void process_item(PacmanGame *game)
 			item->itemMode = Displayed_I;
 			item->eaten = true;
 			item->eatenAt = ticks_game();
+
 			LowVelocity_item(game);
 		}
 		if(i==1&&(ticks_game()-item->eatenAt)>5000)
@@ -764,9 +783,6 @@ void level_init(PacmanGame *game)
 	//reset item
 	item_init(game->item,&game->board);
 
-	//bullet
-	//bullet_init(game->bullet);
-
 }
 
 void pacdeath_init(PacmanGame *game)
@@ -820,23 +836,25 @@ static bool resolve_telesquare(PhysicsBody *body)
 	return false;
 }
 
-void Bullet_item(PacmanGame *game)
-{
-	game->pacman.bulletOn=true;
-	game->pacman.bulletsLeft=5;
-}
 
 void process_bullet(PacmanGame* game)
 {
+	MovementResult result = move_bullet(&game->bullet.body);
 
+	if (result == NewSquare)
+	{
+		game->bullet.body.nextDir = game->bullet.body.curDir;
+	}
+	else if (result == OverCenter)
+	{
+		game->bullet.body.nextDir = game->bullet.body.curDir;
+	}
 }
 
 void bullet_init(Item_bullet* bullet,PacmanGame* game)
 {
 	bullet->body =game->pacman.body;
 	bullet->body.velocity = 140;
-
-	bullet->isDead = false;
 }
 
 

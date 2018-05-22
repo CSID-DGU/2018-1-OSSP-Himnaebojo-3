@@ -76,7 +76,7 @@ SDL_Surface *ghostPoints[4];
 SDL_Surface *pacman;
 SDL_Surface *pacman2;
 SDL_Surface *pacman3;
-SDL_Surface *bullet;
+SDL_Surface *item_bullet;
 SDL_Surface *aniPacman[4][3];
 SDL_Surface *aniPacmanBoost[4][3];
 SDL_Surface *aniPacmanBullet[4][3];
@@ -678,8 +678,7 @@ SDL_Surface* pacman_image(void)
 
 SDL_Surface* bullet_image(void)
 {
-	bullet = load_image(DIR "bullet.png");
-	return bullet;
+	return item_bullet;
 }
 
 
@@ -840,6 +839,12 @@ SDL_Surface* get_item_image(Item item)
 	printf("incorrect enum value\naborting\n");
 	exit(1);
 }
+
+SDL_Surface* get_bullet_image(Item_bullet bullet)
+{
+	return bullet_image;
+}
+
 
 SDL_Surface* get_fruit_score_image(Fruit fruit)
 {
