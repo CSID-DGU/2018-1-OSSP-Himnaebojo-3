@@ -699,16 +699,19 @@ static void process_pellets(PacmanGame *game)
 
 			p->eaten = true;
 			game->pacman.score += pellet_points(p);
-			if(pellet_check(p)) {
+			if(pellet_check(p))
+			{
 				game->pacman.godMode = true;
 				game->pacman.originDt = ticks_game();
-				for(j = 0; j< 4; j++) {
+				for(j = 0; j< 4; j++)
+				{
 					if(game->ghosts[j].isDead == 2)
 						game->ghosts[j].isDead = 0;
 				}
 			}
 
-			//play eat sound
+
+			//TODO play eat sound
 
 			//eating a small pellet makes pacman not move for 1 frame
 			//eating a large pellet makes pacman not move for 3 frames
@@ -738,14 +741,21 @@ static bool check_pacghost_collision(PacmanGame *game)
 
 		if (collides(&game->pacman.body, &g->body))
 		{
+			if(g->isDead==1)
+				return false;
+
 			if(game->pacman.godMode == false)
 				return true;
 			else
 			{
-				if(g->isDead == 2) {return true;}
+				if(g->isDead == 2)
+				{
+					return true;
+				}
 				g->isDead = 1;
 				death_send(g);
 			}
+
 		}
 	}
 
@@ -858,7 +868,13 @@ void process_bullet(PacmanGame* game)
 	for(int i=0;i<4;i++)
 	{
 		if (game->bullet.bullet_displaying == true && collides(&game->ghosts[i].body,&game->bullet.body))
-			game->bullet.bullet_displaying=false;
+		{
+			if(game->ghosts[i].isDead!=1)
+			{
+				game->bullet.bullet_displaying=false;
+				game->ghosts[i].isDead = 1;
+			}
+		}
 	}
 	if(!is_valid_square(&game->board,game->bullet.body.x,game->bullet.body.y))
 	{
