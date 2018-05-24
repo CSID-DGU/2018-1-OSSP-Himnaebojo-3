@@ -66,6 +66,14 @@ void pacman_location_init_player2(Pacman *pacman)
 	pacman->lastAttemptedMoveDirection = Right;
 }
 
+void pacman_death(Pacman *pacman)
+{
+	pacman->body = (PhysicsBody) {14, 23, -8, 0, Left, Left, 1, 0, 0};
+	pacman->body.velocity = 0;
+	pacman->movementType = Unstuck;
+	pacman->lastAttemptedMoveDirection = Right;
+}
+
 int pacman_speed_normal(int level)
 {
 	if (level == 1)  return 80;
