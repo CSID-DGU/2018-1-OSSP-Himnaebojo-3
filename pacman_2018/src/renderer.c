@@ -213,7 +213,7 @@ void draw_game_gameover(void)
 //
 //
 
-void draw_fruit_indicators(int currentLevel)
+void draw_fruit_indicators(int currentLevel)//currentLevel이 0으로 입력되는 버그
 {
 	if (currentLevel < 1)
 	{
