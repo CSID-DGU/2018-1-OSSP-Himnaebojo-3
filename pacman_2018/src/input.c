@@ -42,10 +42,10 @@ bool dir_key_held(Direction direction)
 {
 	switch (direction)
 	{
-		case Up:    return keysHeld[SDLK_UP]    || keysHeld[SDLK_w];
-		case Down:  return keysHeld[SDLK_DOWN]  || keysHeld[SDLK_s];
-		case Left:  return keysHeld[SDLK_LEFT]  || keysHeld[SDLK_a];
-		case Right: return keysHeld[SDLK_RIGHT] || keysHeld[SDLK_d];
+		case Up:    return keysHeld[SDLK_UP];    //|| keysHeld[SDLK_w];
+		case Down:  return keysHeld[SDLK_DOWN];  //|| keysHeld[SDLK_s];
+		case Left:  return keysHeld[SDLK_LEFT];  //|| keysHeld[SDLK_a];
+		case Right: return keysHeld[SDLK_RIGHT]; //|| keysHeld[SDLK_d];
 	}
 
 	printf("should never reach here\n");
@@ -61,6 +61,42 @@ bool dir_pressed_now(Direction *dir)
 	for (int i = 3; i >= 0; i--)
 	{
 		if (!dir_key_held(dirs[i])) continue;
+
+		int x = frame_for_direction(dirs[i]);
+
+		if (x > highestPushed)
+		{
+			*dir = dirs[i];
+			highestPushed = x;
+		}
+	}
+
+	return highestPushed != 0;
+}
+
+bool dir_key_held2(Direction direction)
+{
+	switch (direction)
+	{
+		case Up:    return keysHeld[SDLK_w];    //|| keysHeld[SDLK_w];
+		case Down:  return keysHeld[SDLK_s];  //|| keysHeld[SDLK_s];
+		case Left:  return keysHeld[SDLK_a];  //|| keysHeld[SDLK_a];
+		case Right: return keysHeld[SDLK_d]; //|| keysHeld[SDLK_d];
+	}
+
+	printf("should never reach here\n");
+	exit(1);
+}
+
+bool dir_pressed_now2(Direction *dir)
+{
+	int highestPushed = 0;
+
+	Direction dirs[4] = {Up, Left, Down, Right};
+
+	for (int i = 3; i >= 0; i--)
+	{
+		if (!dir_key_held2(dirs[i])) continue;
 
 		int x = frame_for_direction(dirs[i]);
 
