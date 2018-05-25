@@ -23,9 +23,9 @@ typedef enum
 //Displayed (either we timed-out or the player ate the fruit)
 typedef enum
 {
-	NotDisplaying,
-	Displaying,
-	Displayed
+	NotDisplaying_F,
+	Displaying_F,
+	Displayed_F
 } FruitMode;
 
 //Defines a fruit for use in Pacman.

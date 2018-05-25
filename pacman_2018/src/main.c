@@ -10,6 +10,7 @@
 #include "fps.h"
 #include "game.h"
 #include "input.h"
+#include "item.h"
 #include "intermission.h"
 #include "imageloader.h"
 #include "menu.h"
@@ -200,16 +201,26 @@ static void key_down_hacks(int keycode)
 	static bool rateSwitch = false;
 
 	//TODO: remove this hack and try make it work with the physics body
-	if (keycode == SDLK_SPACE) fps_sethz((rateSwitch = !rateSwitch) ? 200 : 60);
+	if (keycode == SDLK_SPACE) fps_sethz((rateSwitch!=rateSwitch) ? 200 : 60);
 
-	if (keycode == SDLK_b) {
-		if(!pacmanGame.pacman.boostOn) {
+	if (keycode == SDLK_b)
+	{
+		if(!pacmanGame.pacman.boostOn)
+		{
 			pacmanGame.pacman.body.velocity = 100;
 			pacmanGame.pacman.boostOn = true;
-		} else {
+		}
+		else
+		{
 			pacmanGame.pacman.body.velocity = 80;
 			pacmanGame.pacman.boostOn = false;
 		}
+	}
+
+	if(pacmanGame.pacman.bulletOn==true&&keycode==SDLK_SLASH)//bullet모드일 경우 '/' 누르면 총알 발사
+	{
+		pacmanGame.pacman.bulletsLeft--;
+		bullet_init(&pacmanGame.bullet,&pacmanGame);
 	}
 
 	//TODO: move logic into the tick method of the menu

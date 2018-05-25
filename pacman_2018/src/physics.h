@@ -40,6 +40,8 @@ MovementResult move_ghost(PhysicsBody *body);
 
 bool move_pacman(PhysicsBody *body, bool canMoveCur, bool canMoveNext);
 
+MovementResult move_bullet(PhysicsBody *body);
+
 //Returns true if the body is in the center of a tile.
 bool on_center(PhysicsBody *body);
 
