@@ -47,6 +47,10 @@ void game_tick(PacmanGame *game)
 			process_item(game);
 			process_fruit(game);
 			process_pellets(game);
+			if(game->pacman.bulletOn==true)
+			{
+				process_bullet(game);
+			}
 
 			if(game->pacman.bulletOn==true&&game->bullet.bullet_displaying==true)
 			{
@@ -202,8 +206,13 @@ void game_render(PacmanGame *game)
 
 			draw_pacman(&game->pacman);
 
+<<<<<<< HEAD
 			if(game->bullet.bullet_displaying==true)
 				draw_bullet(&game->bullet);
+=======
+			draw_bullet(&game->bullet);
+
+>>>>>>> master
 
 			if(game->pacman.godMode == false)
 			{
@@ -654,7 +663,11 @@ static void process_item(PacmanGame *game)
 			game->pacman.bulletOn=true;
 			game->pacman.bulletsLeft=5;
 		}
+<<<<<<< HEAD
 		if(i==0&&game->pacman.bulletsLeft==0&&game->bullet.bullet_displaying==false)
+=======
+		if(i==0&&game->pacman.bulletsLeft==0)
+>>>>>>> master
 		{
 			game->pacman.bulletOn=false;
 		}
@@ -864,6 +877,7 @@ void process_bullet(PacmanGame* game)
 	{
 		game->bullet.body.nextDir = game->bullet.body.curDir;
 	}
+<<<<<<< HEAD
 
 	for(int i=0;i<4;i++)
 	{
@@ -880,15 +894,24 @@ void process_bullet(PacmanGame* game)
 	{
 		game->bullet.bullet_displaying=false;
 	}
+=======
+>>>>>>> master
 }
 
 void bullet_init(Item_bullet* bullet,PacmanGame* game)
 {
 	bullet->body =game->pacman.body;
+<<<<<<< HEAD
 	bullet->body.velocity = 200;
 	bullet->bullet_displaying=true;
 }
 
+=======
+	bullet->body.velocity = 140;
+}
+
+
+>>>>>>> master
 void LowVelocity_item(PacmanGame *game)
 {
 	for(int i=0;i<4;i++)

@@ -217,7 +217,11 @@ static void key_down_hacks(int keycode)
 		}
 	}
 
+<<<<<<< HEAD
 	if(pacmanGame.pacman.bulletOn==true&&pacmanGame.bullet.bullet_displaying==false&&keycode==SDLK_SLASH)//bullet모드일 경우 '/' 누르면 총알 발사
+=======
+	if(pacmanGame.pacman.bulletOn==true&&keycode==SDLK_SLASH)//bullet모드일 경우 '/' 누르면 총알 발사
+>>>>>>> master
 	{
 		pacmanGame.pacman.bulletsLeft--;
 		bullet_init(&pacmanGame.bullet,&pacmanGame);
