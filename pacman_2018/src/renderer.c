@@ -347,6 +347,22 @@ void draw_pacman(Pacman *pacman)
 			draw_image_coord_offset(pacman_ani_bullet_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
 		else//일반모드
 			draw_image_coord_offset(pacman_ani_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
+	}
+	else
+	{
+		if(pacman->bulletOn)//boost + bullet모드
+			draw_image_coord_offset(pacman_ani_bullet_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
+		else//boost모드
+			draw_image_coord_offset(pacman_ani_boost_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> master
+>>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 	}
 	else
 	{
@@ -355,6 +371,20 @@ void draw_pacman(Pacman *pacman)
 		else//boost모드
 			draw_image_coord_offset(pacman_ani_boost_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
 	}
+}
+
+// bulet rendering
+void draw_bullet(Item_bullet* bullet)
+{
+	//SDL_Surface* image=get_bullet_image(bullet);
+
+	draw_image_coord_offset(get_bullet_image(),bullet->body.x,bullet->body.y+2,-5,8);
+}
+
+// bulet rendering
+void draw_bullet(Item_bullet* bullet)
+{
+	draw_image_coord_offset(get_bullet_image(),bullet->body.x,bullet->body.y+2,-5,8);
 }
 
 // bulet rendering

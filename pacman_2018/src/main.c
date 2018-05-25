@@ -217,6 +217,7 @@ static void key_down_hacks(int keycode)
 		}
 	}
 
+<<<<<<< HEAD
 	if(pacmanGame.pacman.bulletOn==true&&pacmanGame.bullet.bullet_displaying==false&&keycode==SDLK_SLASH)//bullet모드일 경우 '/' 누르면 총알 발사
 	{
 		pacmanGame.pacman.bulletsLeft--;
@@ -227,6 +228,16 @@ static void key_down_hacks(int keycode)
 	{
 		pacmanGame.pacman2.bulletsLeft--;
 		bullet_init(&pacmanGame.bullet2, &pacmanGame.pacman2);
+=======
+<<<<<<< HEAD
+	if(pacmanGame.pacman.bulletOn==true&&pacmanGame.bullet.bullet_displaying==false&&keycode==SDLK_SLASH)//bullet모드일 경우 '/' 누르면 총알 발사
+=======
+	if(pacmanGame.pacman.bulletOn==true&&keycode==SDLK_SLASH)//bullet모드일 경우 '/' 누르면 총알 발사
+>>>>>>> master
+	{
+		pacmanGame.pacman.bulletsLeft--;
+		bullet_init(&pacmanGame.bullet,&pacmanGame);
+>>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 	}
 
 	//TODO: move logic into the tick method of the menu
