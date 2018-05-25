@@ -7,6 +7,7 @@
 
 #include "direction.h"
 #include "main.h"
+#include "item.h"
 #include "fruit.h"
 #include "ghost.h"
 
@@ -37,8 +38,11 @@ SDL_Surface* pts_white_image(void);
 SDL_Surface* pts_peach_image(void);
 
 SDL_Surface* pacman_image(void);
+SDL_Surface* bullet_image(void);
 SDL_Surface* pacman_ani_image(Direction dir, int frame);
 SDL_Surface* pacman_ani_boost_image(Direction dir, int frame);
+SDL_Surface* pacman_ani_bullet_image(Direction dir, int frame);
+
 SDL_Surface* pacman_death_image(int i);
 SDL_Surface* pacman_life_image(void);
 
@@ -55,6 +59,8 @@ SDL_Surface** get_num_images(void);
 SDL_Surface** get_spec_images(void);
 
 SDL_Surface* get_fruit_image(Fruit fruit);
+SDL_Surface* get_item_image(Item item);
+SDL_Surface* get_bullet_image(void);
 
 SDL_Surface* get_ghost_score_image(int i);
 SDL_Surface* get_fruit_score_image(Fruit fruit);

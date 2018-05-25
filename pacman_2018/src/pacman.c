@@ -10,6 +10,7 @@ void pacman_init(Pacman *pacman)
 	pacman->missedFrames = 0;
 	pacman->godMode = false;
 	pacman->boostOn = false;
+	pacman->bulletOn=false;
 }
 
 void pacman_init_multiMode(Pacman *pacman1, Pacman *pacman2)
