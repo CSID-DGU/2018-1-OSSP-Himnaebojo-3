@@ -34,6 +34,7 @@ typedef struct
 	GameState gameState;
 	unsigned int ticksSinceModeChange;
 	Pacman pacman;
+	Pacman pacman2;
 	Ghost ghosts[4];
 	Board board;
 	PelletHolder pelletHolder;
@@ -42,6 +43,7 @@ typedef struct
 	Item_bullet bullet;
 	int highscore;
 	int currentLevel;
+	int multiMode;
 } PacmanGame;
 
 //Updates the game 1 tick, or 1/60th of a second.

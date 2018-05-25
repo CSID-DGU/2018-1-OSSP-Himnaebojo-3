@@ -233,6 +233,18 @@ static void key_down_hacks(int keycode)
 		numCredits++;
 	}
 
+	if (state == Menu && keycode == SDLK_2)
+	{
+		pacmanGame.multiMode=1;
+		printf("MULTIMODE FLAG ON\n");
+	}
+
+	if (state == Menu && keycode == SDLK_1)
+	{
+		pacmanGame.multiMode=0;
+		printf("MULTIMODE FLAG OFF\n");
+	}
+
 	if (keycode == SDLK_9)
 	{
 		printf("plus\n");
