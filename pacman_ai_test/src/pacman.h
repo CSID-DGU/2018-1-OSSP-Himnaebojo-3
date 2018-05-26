@@ -1,10 +1,9 @@
 #pragma once
 
 #include <stdbool.h>
-
 #include "direction.h"
 #include "physics.h"
-
+#include "board.h"
 //pacman has a location (x,y) on the board. This is the tile his center is, and it defines his actual tile
 
 //he also has x/y tile offset, which can be between (-8, 7)
@@ -31,6 +30,8 @@ typedef struct
 	unsigned originDt;
 	Direction lastAttemptedMoveDirection;
 	MovementType movementType;
+	Direction transDirection;
+	Direction nextDirection;
 } Pacman;
 
 
@@ -48,3 +49,5 @@ int pacman_speed_normal(int level);
 
 //Returns pacman speed for given level when in fright mode.
 int pacman_speed_fright(int level);
+
+Direction next_direction_pac(Pacman *pac, Board *board, Direction Ghost_direction, int target_x, int target_y,int flag );
