@@ -68,277 +68,274 @@ Direction next_direction_pac(Pacman *pac, Board *board, Direction Ghost_directio
 
 	 if (flag==1)
 	 {
-		dir_xy(pac->lastAttemptedMoveDirection, &x, &y);
-		int testX = pac->body.x +x;
-		int testY = pac->body.y +y;
-		if (dif_x > 0 && dif_y > 0) {
+		/*if (dif_x > 0 && dif_y > 0) {
 			if (Ghost_direction== Up) {
 				//	if (testX == 0) testX = 26;
 				//	if (testX == 27) testX = 1;
-				if (is_valid_square(board, testX + 0, testY + 1)) {
+				if (pac->movementType == Unstuck) {
 					return Down;
-				} else if (is_valid_square(board, testX + 1, testY + 0)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Down) {
 					return Right;
 				} else
 					return Left;
 			} else if (Ghost_direction == Down) {
-				if (is_valid_square(board, testX + 0, testY + 1)) {
+				if (pac->movementType == Unstuck) {
 					return Down;
-				} else if (is_valid_square(board, testX + 1, testY + 0)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Down) {
 					return Right;
 				} else
 					return Up;
 			} else if (Ghost_direction == Left) {
-				if (is_valid_square(board, testX + 0, testY + 1)) {
+				if (pac->movementType == Unstuck) {
 					return Down;
-				} else if (is_valid_square(board, testX + 1, testY + 0)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Down) {
 					return Right;
 				} else
 					return Up;
 			} else if (Ghost_direction == Right) {
-				if (is_valid_square(board, testX + 0, testY + 1)) {
+				if (pac->movementType == Unstuck) {
 					return Down;
-				} else if (is_valid_square(board, testX + 1, testY + 0)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Down) {
 					return Right;
 				} else
 					return Left;
 			}
-		} else if (dif_x > 0 && dif_y == 0) {
+		} else*/ if (dif_x > 0 && dif_y == 0) {
 			if (Ghost_direction == Up) {
 				//	if (testX == 0) testX = 26;
 				//	if (testX == 27) testX = 1;
 
-				if (is_valid_square(board, testX + 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Right;
-				} else if (is_valid_square(board, testX + 0, testY + 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Right) {
 					return Down;
 				} else
 					return Up;
 			} else if (Ghost_direction == Down) {
-				if (is_valid_square(board, testX + 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Right;
-				} else if (is_valid_square(board, testX + 0, testY - 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Right) {
 					return Up;
 				} else
 					return Down;
 			} else if (Ghost_direction == Left) {
-				if (is_valid_square(board, testX + 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Right;
-				} else if (is_valid_square(board, testX + 0, testY - 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Right) {
 					return Up;
 				} else
 					return Down;
 
 			} else if (Ghost_direction == Right) {
-				if (is_valid_square(board, testX + 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Right;
-				} else if (is_valid_square(board, testX + 0, testY - 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Right) {
 					return Up;
 				} else
 					return Down;
 			}
-		} else if (dif_x > 0 && dif_y < 0) {
+		} /*else if (dif_x > 0 && dif_y < 0) {
 			if (Ghost_direction == Up) {
 				//	if (testX == 0) testX = 26;
 				//	if (testX == 27) testX = 1;
 
-				if (is_valid_square(board, testX + 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Right;
-				} else if (is_valid_square(board, testX + 0, testY - 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Right) {
 					return Up;
 				} else
 					return Down;
 			} else if (Ghost_direction == Down) {
-				if (is_valid_square(board, testX + 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Right;
-				} else if (is_valid_square(board, testX + 0, testY - 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Right) {
 					return Up;
 				} else
 					return Left;
 			} else if (Ghost_direction == Left) {
-				if (is_valid_square(board, testX + 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Right;
-				} else if (is_valid_square(board, testX + 0, testY - 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Right) {
 					return Up;
 				} else
 					return Down;
 
 			} else if (Ghost_direction== Right) {
-				if (is_valid_square(board, testX + 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Right;
-				} else if (is_valid_square(board, testX + 0, testY - 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Right) {
 					return Up;
 				} else
 					return Left;
 			}
-		} else if (dif_x == 0 && dif_y < 0) {
+		} */else if (dif_x == 0 && dif_y < 0) {
 			if (Ghost_direction == Up) {
 				//	if (testX == 0) testX = 26;
 				//	if (testX == 27) testX = 1;
 
-				if (is_valid_square(board, testX + 0, testY - 1)) {
+				if (pac->movementType == Unstuck) {
 					return Up;
-				} else if (is_valid_square(board, testX + 1, testY + 0)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Up) {
 					return Right;
 				} else
 					return Left;
 			} else if (Ghost_direction == Down) {
-				if (is_valid_square(board, testX + 0, testY - 1)) {
+				if (pac->movementType == Unstuck) {
 					return Up;
-				} else if (is_valid_square(board, testX + 1, testY + 0)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Up) {
 					return Right;
 				} else
 					return Left;
 			} else if (Ghost_direction == Left) {
-				if (is_valid_square(board, testX + 0, testY - 1)) {
+				if (pac->movementType == Unstuck) {
 					return Up;
-				} else if (is_valid_square(board, testX + 1, testY + 0)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Up) {
 					return Right;
 				} else
 					return Down;
 			} else if (Ghost_direction== Right) {
-				if (is_valid_square(board, testX + 0, testY - 1)) {
+				if (pac->movementType == Unstuck) {
 					return Up;
-				} else if (is_valid_square(board, testX - 1, testY + 0)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Up) {
 					return Left;
 				} else
 					return Down;
 			}
-		} else if (dif_x < 0 && dif_y < 0) {
+		} /*else if (dif_x < 0 && dif_y < 0) {
 			if (Ghost_direction == Up) {
 				//	if (testX == 0) testX = 26;
 				//	if (testX == 27) testX = 1;
 
-				if (is_valid_square(board, testX - 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Left;
-				} else if (is_valid_square(board, testX + 0, testY - 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Left) {
 					return Up;
 				} else
 					return Down;
 			} else if (Ghost_direction == Down) {
-				if (is_valid_square(board, testX - 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Left;
-				} else if (is_valid_square(board, testX + 0, testY - 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Left) {
 					return Up;
 				} else
 					return Right;
 			} else if (Ghost_direction == Left) {
-				if (is_valid_square(board, testX - 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Left;
-				} else if (is_valid_square(board, testX + 0, testY - 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Left) {
 					return Up;
 				} else
 					return Right;
 			} else if (Ghost_direction == Right) {
-				if (is_valid_square(board, testX - 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Left;
-				} else if (is_valid_square(board, testX + 0, testY - 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Left) {
 					return Up;
 				} else
 					return Down;
 			}
-		} else if (dif_x < 0 && dif_y == 0) {
+		} */else if (dif_x < 0 && dif_y == 0) {
 			if (Ghost_direction == Up) {
 				//	if (testX == 0) testX = 26;
 				//	if (testX == 27) testX = 1;
 
-				if (is_valid_square(board, testX - 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Left;
-				} else if (is_valid_square(board, testX + 0, testY + 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Left) {
 					return Down;
 				} else
 					return Up;
 			} else if (Ghost_direction== Down) {
-				if (is_valid_square(board, testX - 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Left;
-				} else if (is_valid_square(board, testX + 0, testY - 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Left) {
 					return Up;
 				} else
 					return Right;
 			} else if (Ghost_direction == Left) {
-				if (is_valid_square(board, testX - 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Left;
-				} else if (is_valid_square(board, testX + 0, testY + 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Left) {
 					return Down;
 				} else
 					return Up;
 			} else if (Ghost_direction == Right) {
-				if (is_valid_square(board, testX - 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Left;
-				} else if (is_valid_square(board, testX + 0, testY + 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Left) {
 					return Down;
 				} else
 					return Up;
 			}
-		} else if (dif_x < 0 && dif_y > 0) {
+		} /*else if (dif_x < 0 && dif_y > 0) {
 			if (Ghost_direction == Up) {
 				//	if (testX == 0) testX = 26;
 				//	if (testX == 27) testX = 1;
 
-				if (is_valid_square(board, testX - 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Left;
-				} else if (is_valid_square(board, testX + 0, testY + 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Left) {
 					return Down;
 				} else
 					return Right;
 			} else if (Ghost_direction == Down) {
-				if (is_valid_square(board, testX - 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Left;
-				} else if (is_valid_square(board, testX + 0, testY + 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Left) {
 					return Down;
 				} else
 					return Up;
 			} else if (Ghost_direction== Left) {
-				if (is_valid_square(board, testX - 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Left;
-				} else if (is_valid_square(board, testX + 0, testY + 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Left) {
 					return Down;
 				} else
 					return Right;
 			} else if (Ghost_direction == Right) {
-				if (is_valid_square(board, testX - 1, testY + 0)) {
+				if (pac->movementType == Unstuck) {
 					return Left;
-				} else if (is_valid_square(board, testX + 0, testY + 1)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Left) {
 					return Down;
 				} else
 					return Up;
 			}
-		} else if (dif_x == 0 && dif_y > 0) {
+		} */else if (dif_x == 0 && dif_y > 0) {
 			if (Ghost_direction == Up) {
 				//	if (testX == 0) testX = 26;
 				//	if (testX == 27) testX = 1;
 
-				if (is_valid_square(board, testX + 0, testY + 1)) {
+				if (pac->movementType == Unstuck) {
 					return Down;
-				} else if (is_valid_square(board, testX - 1, testY + 0)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Down) {
 					return Left;
 				} else
 					return Right;
 			} else if (Ghost_direction == Down) {
-				if (is_valid_square(board, testX + 0, testY + 1)) {
+				if (pac->movementType == Unstuck) {
 					return Down;
-				} else if (is_valid_square(board, testX - 1, testY + 0)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Down) {
 					return Left;
 				} else
 					return Right;
 			} else if (Ghost_direction == Left) {
-				if (is_valid_square(board, testX + 0, testY + 1)) {
+				if (pac->movementType == Unstuck) {
 					return Down;
-				} else if (is_valid_square(board, testX + 1, testY + 0)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Down) {
 					return Right;
 				} else
 					return Up;
 			} else if (Ghost_direction == Right) {
-				if (is_valid_square(board, testX + 0, testY + 1)) {
+				if (pac->movementType == Unstuck) {
 					return Down;
-				} else if (is_valid_square(board, testX - 1, testY + 0)) {
+				} else if (pac->movementType == Stuck && pac->body.curDir==Down) {
 					return Left;
 				} else
 					return Up;
 			}
 		}
-
 	}
+
 
 	dir_xy(pac->lastAttemptedMoveDirection, &x, &y);
 

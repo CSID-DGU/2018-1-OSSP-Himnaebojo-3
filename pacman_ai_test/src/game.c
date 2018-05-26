@@ -761,15 +761,24 @@ static bool resolve_telesquare(PhysicsBody *body)
 	return false;
 }
 
-void PROCESS_AI(PacmanGame *game){
-
+static void PROCESS_AI(PacmanGame *game){
 	Pacman *pacman = &game->pacman;
+	Board *board = &game->board;
 	Ghost *NearGhost;
 	PelletHolder *holder = &game->pelletHolder;
+	Direction oldLastAttemptedDir = pacman->lastAttemptedMoveDirection;
+	Direction newDir;
 	int target_x;
 	int target_y;
+
+	if (pacman->missedFrames != 0)
+	{
+		pacman->missedFrames--;
+		return;
+	}
+
 	int ghost_pac_distance=10000;
-	int Ghost_min_distance = 36;
+	int Ghost_min_distance = 100;
 	for (int i = 0; i < 4; i++)
 	{
 			Ghost *g = &game->ghosts[i];
@@ -783,13 +792,13 @@ void PROCESS_AI(PacmanGame *game){
 	if (pacman->godMode) {
 		target_x = NearGhost->body.x;
 		target_y = NearGhost->body.y;
+		newDir = next_direction_pac(pacman, &game->board, NearGhost->nextDirection, target_x, target_y, 0);
 	}
 	else if(ghost_pac_distance <= Ghost_min_distance)
 	{
 		target_x = NearGhost->body.x;
 		target_y = NearGhost->body.y;
-		pacman->lastAttemptedMoveDirection =
-						next_direction_pac(pacman, &game->board, NearGhost->nextDirection, target_x, target_y,1);
+		newDir = next_direction_pac(pacman, &game->board, NearGhost->nextDirection, target_x, target_y, 1);
 	}
 	else {
 			int minDistance = 10000;
@@ -802,25 +811,75 @@ void PROCESS_AI(PacmanGame *game){
 					minDistance = tempdistance;
 					target_x = p->x;
 					target_y = p->y;
+					newDir = next_direction_pac(pacman, &game->board, NearGhost->nextDirection, target_x, target_y, 0);
 				}
 			}
 		}
-	MovementResult result = move_pac_ai(&pacman->body);
+
+	//bool dirPressed = dir_pressed_now(&newDir); AI is always pressed
+
+
+	//user wants to move in a direction
+	pacman->lastAttemptedMoveDirection = newDir;
+
+	//if player holds opposite direction to current walking dir
+	//we can always just switch current walking direction
+	//since we're on parallel line
+	if (newDir == dir_opposite(pacman->body.curDir))
+	{
+		pacman->body.curDir = newDir;
+		pacman->body.nextDir = newDir;
+	}
+
+	//if pacman was stuck before just set his current direction as pressed
+	if (pacman->movementType == Stuck)
+	{
+		pacman->body.curDir = newDir;
+	}
+
+	pacman->body.nextDir = newDir;
+
+	pacman->movementType = Unstuck;
+
+	int curDirX = 0;
+	int curDirY = 0;
+	int nextDirX = 0;
+	int nextDirY = 0;
+
+	dir_xy(pacman->body.curDir, &curDirX, &curDirY);
+	dir_xy(pacman->body.nextDir, &nextDirX, &nextDirY);
+
+	int newCurX = pacman->body.x + curDirX;
+	int newCurY = pacman->body.y + curDirY;
+	int newNextX = pacman->body.x + nextDirX;
+	int newNextY = pacman->body.y + nextDirY;
+
+	bool canMoveCur =  is_valid_square(board, newCurX, newCurY) || is_tele_square(newCurX, newCurY);
+	bool canMoveNext = is_valid_square(board, newNextX, newNextY) || is_tele_square(newNextX, newNextY);
+
+	//if pacman is currently on a center tile and can't move in either direction
+	//don't move him
+	if (on_center(&pacman->body) && !canMoveCur && !canMoveNext)
+	{
+		pacman->movementType = Stuck;
+		pacman->lastAttemptedMoveDirection = oldLastAttemptedDir;
+
+		return;
+	}
+
+	MovementResult result = move_pacman(&pacman->body, true, true);
+
+	//if pacman is on the center, and he couldn't move either of  his last directions
+	//he must be stuck now
+	if (on_center(&pacman->body) && !canMoveCur && !canMoveNext)
+	{
+		pacman->movementType = Stuck;
+		return;
+	}
+
 	resolve_telesquare(&pacman->body);
-	if (result == NewSquare)
-	{
-		pacman->lastAttemptedMoveDirection =
-				next_direction_pac(pacman, &game->board, NearGhost->nextDirection,target_x, target_y,0);
-	}
-	else if (result == OverCenter)
-	{
-		//they've hit the center of a tile, so change their current direction to the new direction
-		pacman->body.curDir = pacman->transDirection;
-		pacman->body.nextDir = pacman->lastAttemptedMoveDirection;
-		pacman->transDirection = pacman->lastAttemptedMoveDirection;
-	}
-	//search_fruit(game, &target_x, &target_y);
 }
+
 
 void search_fruit(PacmanGame *game, int *target_x, int *target_y ){
 	GameFruit *f1 = &game->gameFruit1;

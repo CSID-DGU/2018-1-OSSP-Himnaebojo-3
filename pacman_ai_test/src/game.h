@@ -63,6 +63,4 @@ void pacdeath_init(PacmanGame *game);
 //Returns the length of the given integer.
 int int_length(int num);
 
-void PROCESS_AI(PacmanGame *game);
-
 void search_fruit(PacmanGame *game, int *target_x, int *target_y );
