@@ -49,6 +49,7 @@ void reset_ghost(Ghost *ghost, GhostType type)
 	ghost->body.velocity = 80;
 
 	ghost->movementMode = mode;
+	//ghost->movementMode = mode;
 	ghost->transDirection = Left;
 	ghost->nextDirection = Left;
 	ghost->isDead = false;
@@ -85,8 +86,7 @@ void death_send(Ghost *ghost)
 	ghost->targetX = targetX;
 	ghost->targetY = targetY;
 
-	if((ghost->body.x) == 13 && (ghost->body.y == 11))
-	{
+	if((ghost->body.x) == 13 && (ghost->body.y == 11)) {
 		ghost->isDead = 2;
 	}
 }
@@ -188,8 +188,8 @@ void execute_red_logic(Ghost *redGhost, Pacman *pacman)
 	redGhost->targetY = rNum2;
 
 	// Red's AI is to set his target position to pacmans
-	redGhost->targetX = pacman->body.x;
-	redGhost->targetY = pacman->body.y;
+	//redGhost->targetX = pacman->body.x;
+	//redGhost->targetY = pacman->body.y;
 
 	if(redGhost->isDead == 1) {death_send(redGhost);}
 }

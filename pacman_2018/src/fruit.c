@@ -53,14 +53,13 @@ void reset_fruit(GameFruit *gameFruit, Board *board)
 	//srand((unsigned)time(NULL));
 	int randX = 0;
 	int randY = 0;
-	do
-	{
+	do {
 			randX = rand() % 26;
 			randY = rand() % 30;
 	} while( (is_valid_square(board, randX, randY) || is_tele_square(randX, randY) ) == false);
 
 	gameFruit->fruit = Cherry;
-	gameFruit->fruitMode = NotDisplaying_F;
+	gameFruit->fruitMode = NotDisplaying;
 	gameFruit->startedAt = 0;
 	gameFruit->displayTime = 0;
 
