@@ -200,7 +200,7 @@ static void key_down_hacks(int keycode)
 	static bool rateSwitch = false;
 
 	//TODO: remove this hack and try make it work with the physics body
-	if (keycode == SDLK_SPACE) fps_sethz((rateSwitch = !rateSwitch) ? 200 : 60);
+	if (keycode == SDLK_SPACE) fps_sethz((rateSwitch!=rateSwitch) ? 200 : 60);
 
 	if (keycode == SDLK_b) {
 		if(!pacmanGame.pacman.boostOn) {
@@ -216,12 +216,6 @@ static void key_down_hacks(int keycode)
 	if (state == Menu && keycode == SDLK_5 && numCredits < 99)
 	{
 		numCredits++;
-	}
-
-	if (state == Menu && keycode == SDLK_3)
-	{
-		pacmanGame.PVEMODE=1;
-		printf("pvemode\n");
 	}
 
 	if (keycode == SDLK_9)

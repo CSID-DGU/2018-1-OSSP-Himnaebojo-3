@@ -23,9 +23,6 @@ static void process_pellets(PacmanGame *game);
 static bool check_pacghost_collision(PacmanGame *game);     //return true if pacman collided with any ghosts
 static void enter_state(PacmanGame *game, GameState state); //transitions to/ from a state
 static bool resolve_telesquare(PhysicsBody *body);          //wraps the body around if they've gone tele square
-bool AI_PROCESS(PacmanGame *game, Direction *newDir);
-void PROCESS_AI(PacmanGame *game);
-void search_fruit(PacmanGame *game, int *target_x, int *target_y );
 
 void game_tick(PacmanGame *game)
 {
@@ -43,10 +40,9 @@ void game_tick(PacmanGame *game)
 			break;
 		case GamePlayState:
 			// everyone can move and this is the standard 'play' game mode
-			//process_player(game);
-			PROCESS_AI(game);
+			process_player(game);
 			process_ghosts(game);
-
+			//process_items(game);
 			process_fruit(game);
 			process_pellets(game);
 
@@ -352,8 +348,8 @@ static void process_player(PacmanGame *game)
 
 	Direction newDir;
 
-	//bool dirPressed = dir_pressed_now(&newDir);
-	bool dirPressed = AI_PROCESS(game, &newDir);
+	bool dirPressed = dir_pressed_now(&newDir);
+
 	if (dirPressed)
 	{
 		//user wants to move in a direction
@@ -416,30 +412,16 @@ static void process_player(PacmanGame *game)
 		pacman->movementType = Stuck;
 		pacman->lastAttemptedMoveDirection = oldLastAttemptedDir;
 
-		/*if(game->PVEMODE){
-			pacman->body.curDir = pacman->transDirection;
-			pacman->body.nextDir = pacman->lastAttemptedMoveDirection;
-			pacman->transDirection = pacman->lastAttemptedMoveDirection;
-			printf("\n");
-		}*/
-
 		return;
 	}
 
-
-	MovementResult result = move_pacman(&pacman->body, true, true);
+	move_pacman(&pacman->body, canMoveCur, canMoveNext);
 
 	//if pacman is on the center, and he couldn't move either of  his last directions
 	//he must be stuck now
 	if (on_center(&pacman->body) && !canMoveCur && !canMoveNext)
 	{
 		pacman->movementType = Stuck;
-		/*if(game->PVEMODE){
-			pacman->body.curDir = pacman->transDirection;
-			pacman->body.nextDir = pacman->lastAttemptedMoveDirection;
-			pacman->transDirection = pacman->lastAttemptedMoveDirection;
-			printf("tttt\n");
-		}*/
 		return;
 	}
 
@@ -759,342 +741,4 @@ static bool resolve_telesquare(PhysicsBody *body)
 	if (body->x == 28) { body->x =  0; return true; }
 
 	return false;
-}
-
-bool AI_PROCESS(PacmanGame *game, Direction *newDir)
-{
-	Direction dirs[4] = {Up, Left, Down, Right};
-	PelletHolder *holder = &game->pelletHolder;
-	Pacman *pac = &game->pacman;
-	int Ghost_min_distance = 16;
-
-	int current_x=(pac->body.x);
-	int current_y=(pac->body.y);
-
-	int target_x;
-	int target_y;
-	int direction=3;
-
-	int ghost_pac_distance=10000;
-	Direction ghost_dir;
-	Direction dir_pac;
-
-	for (int i = 0; i < 4; i++)
-	{
-			Ghost *g = &game->ghosts[i];
-			int tempdistance_with_ghost = (g->body.x - current_x)*(g->body.x - current_x) + (g->body.y - current_y)*(g->body.y - current_y);
-			if(ghost_pac_distance > tempdistance_with_ghost){
-				ghost_pac_distance = tempdistance_with_ghost;
-				ghost_dir=g->body.curDir;
-			}
-
-	}
-
-	if(ghost_pac_distance <= Ghost_min_distance){
-		switch(ghost_dir){
-			case Up:    { direction= 0; break; }
-			case Down:  { direction= 2; break; }
-			case Left:  { direction= 1; break; }
-			case Right: { direction= 3; break; }
-		}
-
-		if(direction == 0 && pac->movementType == Stuck){
-			int random = rand()%2;
-			if(random == 0){
-				direction = 1;
-			}else if(random == 1){
-				direction = 3;
-			}else{
-				direction = 2;
-			}
-		}
-
-		else if(direction == 1 && pac->movementType == Stuck){
-			int random = rand()%2;
-			if(random == 0){
-				direction = 0;
-			}else if(random == 1){
-				direction = 3;
-			}else{
-				direction = 2;
-			}
-		}
-
-		else if(direction == 2 && pac->movementType == Stuck){
-			int random = rand()%2;
-			if(random == 0){
-				direction = 0;
-			}else if(random == 1){
-				direction = 3;
-			}else{
-				direction = 1;
-			}
-		}
-
-		else if(direction == 3 && pac->movementType == Stuck){
-			int random = rand()%2;
-			if(random == 0){
-				direction = 0;
-			}else if(random == 1){
-				direction = 1;
-			}else{
-				direction = 2;
-			}
-		}
-
-
-	}
-	else{
-		int minDistance=10000;
-		for (int i = 0; i < holder->totalNum; i++)
-		{
-			Pellet *p = &holder->pellets[i];
-			int tempdistance = ((current_x)-(p->x))*((current_x)-(p->x))+((current_y)-(p->y))*((current_y)-(p->y));
-
-			if (!p->eaten && minDistance > tempdistance){
-				minDistance = tempdistance;
-				target_x = p->x;
-				target_y = p->y;
-			}
-		}
-
-		printf("x: %d\n", target_x);
-		printf("y: %d\n", target_y);
-
-		dir_pac = next_direction_pac(pac, &game->board, target_x, target_y);
-
-
-		switch(dir_pac){
-			case Up:    { direction= 0; pac->body.nextDir = dir_pac; printf("aaaaa\n"); break; }
-			case Down:  { direction= 2; pac->body.nextDir = dir_pac; printf("aaaab\n"); break; }
-			case Left:  { direction= 1; pac->body.nextDir = dir_pac; printf("aaaac\n"); break; }
-			case Right: { direction= 3; pac->body.nextDir = dir_pac; printf("aaaad\n");  break; }
-		}
-
-
-		//int dx = target_x - pac->body.x;
-		//int dy = target_y - pac->body.y;
-
-		//if(dx > 0){
-			//direction = 1;
-		//}else
-			//direction = 0;
-
-	}
-	*newDir = dirs[direction];
-	return true;
-}
-
-
-void PROCESS_AI(PacmanGame *game){
-
-	Pacman *pacman = &game->pacman;
-	Board *board = &game->board;
-	Ghost *NearGhost;
-	Direction dirs[4] = {Up, Left, Down, Right};
-	PelletHolder *holder = &game->pelletHolder;
-
-	int current_x=(pacman->body.x);
-	int current_y=(pacman->body.y);
-
-	int ghost_pac_distance=10000;
-	Direction ghost_dir;
-
-	int target_x;
-	int target_y;
-
-	int Ghost_min_distance = 16;
-
-	for (int i = 0; i < 4; i++)
-	{
-			Ghost *g = &game->ghosts[i];
-			int tempdistance_with_ghost = (g->body.x - current_x)*(g->body.x - current_x) + (g->body.y - current_y)*(g->body.y - current_y);
-			if(ghost_pac_distance > tempdistance_with_ghost){
-				ghost_pac_distance = tempdistance_with_ghost;
-				ghost_dir=g->body.curDir;
-				NearGhost=g;
-			}
-
-	}
-
-	if(ghost_pac_distance <= Ghost_min_distance)
-	{
-
-		switch(NearGhost->ghostType){
-		case Blinky:
-			printf("Blinky : %d %d\n", NearGhost->body.x, NearGhost->body.y);
-			break;
-		case Inky:
-			printf("Inky : %d %d\n", NearGhost->body.x, NearGhost->body.y);
-			break;
-		case Pinky:
-			printf("Pinky : %d %d\n", NearGhost->body.x, NearGhost->body.y);
-			break;
-		case Clyde:
-			printf("Clyde : %d %d\n", NearGhost->body.x, NearGhost->body.y);
-			break;
-		}
-
-		int dx = current_x - NearGhost->body.x;
-		int dy = current_y - NearGhost->body.y; // calc ghost's position to pacman's position vector;
-		printf("pacman %d %d\n", current_x, current_y);
-		printf("dx : %d, dy: %d\n", dx, dy);
-
-		if(dx==0 && dy>0){
-			target_x = current_x;
-			target_y = current_y+2;
-			//pacman->lastAttemptedMoveDirection=Down;
-		}
-		else if(dx<0 && dy==0){
-			target_x = current_x-2;
-			target_y = current_y;
-			//pacman->lastAttemptedMoveDirection=Left;
-		}
-		else if(dx==0 && dy<0){
-			target_x = current_x;
-			target_y = current_y-2;
-			//pacman->lastAttemptedMoveDirection=Up;
-		}
-		else if(dx>0 && dy==0){
-			target_x = current_x+2;
-			target_y = current_y;
-			//pacman->lastAttemptedMoveDirection=Right;
-		}
-		else if (dx>0 && dy >0){
-			if(rand()%1){
-				target_x = current_x+2;
-				target_y = current_y;
-			}else{
-				target_x = current_x+2;
-				target_y = current_y+2;
-			}
-		}
-		else if (dx<0 && dy>0){
-			if(rand()%1){
-				target_x = current_x-2;
-				target_y = current_y;
-			}else{
-				target_x = current_x-2;
-				target_y = current_y+2;
-			}
-		}
-		else if (dx <0 && dy<0){
-			if(rand()%1){
-				target_x = current_x-2;
-				target_y = current_y;
-			}else{
-				target_x = current_x-2;
-				target_y = current_y-2;
-			}
-		}
-		else if(dx>0 && dy < 0){
-			if(rand()%1){
-				target_x = current_x+2;
-				target_y = current_y;
-			}else{
-				target_x = current_x+2;
-				target_y = current_y-2;
-			}
-		}
-
-		if(pacman->godMode)
-		{//TODO: if ghost follow the pacman, pacman will turn around
-			target_x = NearGhost->body.x;
-			target_y = NearGhost->body.y;
-		}
-
-		MovementResult result = move_pac_ai(&pacman->body);
-		resolve_telesquare(&pacman->body);
-		if (result == NewSquare)
-		{
-			pacman->lastAttemptedMoveDirection = next_direction_pac(pacman, &game->board, target_x, target_y);
-		}
-		else if (result == OverCenter)
-		{
-			//they've hit the center of a tile, so change their current direction to the new direction
-			pacman->body.curDir = pacman->transDirection;
-			pacman->body.nextDir = pacman->lastAttemptedMoveDirection;
-			pacman->transDirection = pacman->lastAttemptedMoveDirection;
-		}
-	}
-	else{
-		int minDistance=10000;
-		for (int i = 0; i < holder->totalNum; i++)
-		{
-			Pellet *p = &holder->pellets[i];
-			int tempdistance = ((current_x)-(p->x))*((current_x)-(p->x))+((current_y)-(p->y))*((current_y)-(p->y));
-
-			if (!p->eaten && minDistance > tempdistance){
-				minDistance = tempdistance;
-				target_x = p->x;
-				target_y = p->y;
-			}
-		}
-
-		search_fruit(game, &target_x, &target_y);
-
-		MovementResult result = move_pac_ai(&pacman->body);
-		resolve_telesquare(&pacman->body);
-		if (result == NewSquare)
-		{
-			pacman->lastAttemptedMoveDirection = next_direction_pac(pacman, &game->board, target_x, target_y);
-		}
-		else if (result == OverCenter)
-		{
-			//they've hit the center of a tile, so change their current direction to the new direction
-			pacman->body.curDir = pacman->transDirection;
-			pacman->body.nextDir = pacman->lastAttemptedMoveDirection;
-			pacman->transDirection = pacman->lastAttemptedMoveDirection;
-		}
-	}
-
-	/*
-	MovementResult result = move_pac_ai(&pacman->body);
-	resolve_telesquare(&pacman->body);
-	if (result == NewSquare)
-	{
-		pacman->lastAttemptedMoveDirection = next_direction_pac(pacman, &game->board, target_x, target_y);
-	}
-	else if (result == OverCenter)
-	{
-		//they've hit the center of a tile, so change their current direction to the new direction
-		pacman->body.curDir = pacman->transDirection;
-		pacman->body.nextDir = pacman->lastAttemptedMoveDirection;
-		pacman->transDirection = pacman->lastAttemptedMoveDirection;
-	}
-	*/
-}
-
-void search_fruit(PacmanGame *game, int *target_x, int *target_y ){
-	GameFruit *f1 = &game->gameFruit1;
-	GameFruit *f2 = &game->gameFruit2;
-	GameFruit *f3 = &game->gameFruit3;
-	GameFruit *f4 = &game->gameFruit4;
-	GameFruit *f5 = &game->gameFruit5;
-
-	if(f1->fruitMode == Displaying){
-		*target_x = f1->x;
-		*target_y = f1->y;
-		printf("fruit : %d %d\n", f1->x, f1->y);
-	}
-
-	else if(f2->fruitMode == Displaying){
-		*target_x = f2->x;
-		*target_y = f2->y;
-	}
-
-	else if(f3->fruitMode == Displaying){
-		*target_x = f3->x;
-		*target_y = f3->y;
-	}
-
-	else if(f4->fruitMode == Displaying){
-		*target_x = f4->x;
-		*target_y = f4->y;
-	}
-
-	else if(f5->fruitMode == Displaying){
-		*target_x = f5->x;
-		*target_y = f5->y;
-	}
 }

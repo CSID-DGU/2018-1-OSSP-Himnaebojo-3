@@ -39,7 +39,6 @@ typedef struct
 	GameFruit gameFruit1, gameFruit2, gameFruit3, gameFruit4, gameFruit5;
 	int highscore;
 	int currentLevel;
-	int PVEMODE;
 } PacmanGame;
 
 //Updates the game 1 tick, or 1/60th of a second.
@@ -62,9 +61,3 @@ void pacdeath_init(PacmanGame *game);
 
 //Returns the length of the given integer.
 int int_length(int num);
-
-bool AI_PROCESS(PacmanGame *game, Direction *newDir);
-
-void PROCESS_AI(PacmanGame *game);
-
-void search_fruit(PacmanGame *game, int *target_x, int *target_y );

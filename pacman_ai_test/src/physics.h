@@ -38,7 +38,7 @@ bool collides_obj(PhysicsBody *body, int otherX, int otherY);
 //Returns true if the body changed square (a complete tile) during the move, false otherwise
 MovementResult move_ghost(PhysicsBody *body);
 
-MovementResult move_pacman(PhysicsBody *body, bool canMoveCur, bool canMoveNext);
+bool move_pacman(PhysicsBody *body, bool canMoveCur, bool canMoveNext);
 
 //Returns true if the body is in the center of a tile.
 bool on_center(PhysicsBody *body);
@@ -48,5 +48,3 @@ bool on_vert(PhysicsBody *body);
 
 //Returns true if the body is in the center of a tile on the horozontal axis.
 bool on_horo(PhysicsBody *body);
-
-MovementResult move_pac_ai(PhysicsBody *body);
