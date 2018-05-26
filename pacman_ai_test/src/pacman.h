@@ -50,4 +50,4 @@ int pacman_speed_normal(int level);
 //Returns pacman speed for given level when in fright mode.
 int pacman_speed_fright(int level);
 
-Direction next_direction_pac(Pacman *pac, Board *board, Direction Ghost_direction, int target_x, int target_y,int flag );
+Direction next_direction_pac(Pacman *pac, Board *board, int target_x, int target_y);

@@ -26,4 +26,6 @@ void dir_xy(Direction dir, int *x, int *y);
 void dir_xy_buggy(Direction dir, int *x, int *y);
 
 //Returns the opposite direction to the one given.
+
+
 Direction dir_opposite(Direction dir);
