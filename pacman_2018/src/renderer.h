@@ -8,7 +8,7 @@
 #include "pacman.h"
 #include "pellet.h"
 #include "text.h"
-
+#include "main.h"
 //Holds data relating to a single rendered ghost-row.
 typedef struct
 {
@@ -34,6 +34,7 @@ void draw_vanity_animation(int dt);
 // Instructions screen renderering
 //
 
+void draw_select_playmode(ModeState *mode);
 void draw_instrc_info(void);
 void draw_instrc_corporate_info(void);
 
