@@ -45,6 +45,7 @@ static void process_events(void);
 static void key_down_hacks(int keycode);
 
 static ProgramState state;
+static ModeState mode;
 static MenuSystem menuSystem;
 static PacmanGame pacmanGame;
 
@@ -82,8 +83,8 @@ static void internal_tick(void)
 	{
 		case Menu:
 			menu_tick(&menuSystem);
-
-			if (menuSystem.action == GoToGame)
+//Single 모드 시 실행
+			if (menuSystem.action == GoToGame && mode==Single)
 			{
 				state = Game;
 				startgame_init();
@@ -113,7 +114,7 @@ static void internal_render(void)
 	switch (state)
 	{
 		case Menu:
-			menu_render(&menuSystem);
+			menu_render(&menuSystem, &mode);
 			break;
 		case Game:
 			game_render(&pacmanGame);
@@ -133,6 +134,9 @@ static void game_init(void)
 
 	//set to be in menu
 	state = Menu;
+
+	//최초 실행 시 Single 모드로 설정
+	mode = Single;
 
 	//init the framerate manager
 	fps_init(60);
@@ -216,6 +220,16 @@ static void key_down_hacks(int keycode)
 	if (state == Menu && keycode == SDLK_5 && numCredits < 99)
 	{
 		numCredits++;
+	}
+    //키보드 입력에 따라 플레이 모드 바꾸기
+	if (state == Menu && numCredits!=0 && keycode == SDLK_DOWN && mode<2)
+	{
+		mode++;
+	}
+
+	if (state == Menu && numCredits!=0 && keycode == SDLK_UP && mode>0)
+	{
+		mode--;
 	}
 
 	if (keycode == SDLK_9)
