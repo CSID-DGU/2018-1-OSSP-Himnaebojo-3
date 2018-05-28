@@ -83,9 +83,22 @@ static void internal_tick(void)
 	{
 		case Menu:
 			menu_tick(&menuSystem);
-//Single 모드 시 실행
+//playmode별 실행 분기
 			if (menuSystem.action == GoToGame && mode==Single)
 			{
+				pacmanGame.multiMode=0;
+				state = Game;
+				startgame_init();
+			}
+			else if (menuSystem.action == GoToGame && mode==Pvp)
+			{
+				pacmanGame.multiMode=1;
+				state = Game;
+				startgame_init();
+			}
+			else if (menuSystem.action == GoToGame && mode==Pve)
+			{
+				pacmanGame.multiMode=1; //Pve 모드는 일단 Pvp가 실행되게 설정
 				state = Game;
 				startgame_init();
 			}
