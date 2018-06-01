@@ -887,182 +887,114 @@ bool AI_PROCESS(PacmanGame *game, Direction *newDir)
 
 
 void PROCESS_AI(PacmanGame *game){
-
 	Pacman *pacman = &game->pacman;
 	Board *board = &game->board;
 	Ghost *NearGhost;
-	Direction dirs[4] = {Up, Left, Down, Right};
 	PelletHolder *holder = &game->pelletHolder;
-
-	int current_x=(pacman->body.x);
-	int current_y=(pacman->body.y);
-
-	int ghost_pac_distance=10000;
-	Direction ghost_dir;
-
+	Direction oldLastAttemptedDir = pacman->lastAttemptedMoveDirection;
+	Direction newDir;
 	int target_x;
 	int target_y;
 
-	int Ghost_min_distance = 16;
+		if (pacman->missedFrames != 0) {
+			pacman->missedFrames--;
+			return;
+		}
 
-	for (int i = 0; i < 4; i++)
-	{
+		int ghost_pac_distance = 10000;
+		int Ghost_min_distance = 25;
+		for (int i = 0; i < 4; i++) {
 			Ghost *g = &game->ghosts[i];
-			int tempdistance_with_ghost = (g->body.x - current_x)*(g->body.x - current_x) + (g->body.y - current_y)*(g->body.y - current_y);
-			if(ghost_pac_distance > tempdistance_with_ghost){
+			int tempdistance_with_ghost = (g->body.x - pacman->body.x)
+					* (g->body.x - pacman->body.x)
+					+ (g->body.y - pacman->body.y) * (g->body.y - pacman->body.y);
+			if (ghost_pac_distance > tempdistance_with_ghost) {
 				ghost_pac_distance = tempdistance_with_ghost;
-				ghost_dir=g->body.curDir;
-				NearGhost=g;
-			}
-
-	}
-
-	if(ghost_pac_distance <= Ghost_min_distance)
-	{
-
-		switch(NearGhost->ghostType){
-		case Blinky:
-			printf("Blinky : %d %d\n", NearGhost->body.x, NearGhost->body.y);
-			break;
-		case Inky:
-			printf("Inky : %d %d\n", NearGhost->body.x, NearGhost->body.y);
-			break;
-		case Pinky:
-			printf("Pinky : %d %d\n", NearGhost->body.x, NearGhost->body.y);
-			break;
-		case Clyde:
-			printf("Clyde : %d %d\n", NearGhost->body.x, NearGhost->body.y);
-			break;
-		}
-
-		int dx = current_x - NearGhost->body.x;
-		int dy = current_y - NearGhost->body.y; // calc ghost's position to pacman's position vector;
-		printf("pacman %d %d\n", current_x, current_y);
-		printf("dx : %d, dy: %d\n", dx, dy);
-
-		if(dx==0 && dy>0){
-			target_x = current_x;
-			target_y = current_y+2;
-			//pacman->lastAttemptedMoveDirection=Down;
-		}
-		else if(dx<0 && dy==0){
-			target_x = current_x-2;
-			target_y = current_y;
-			//pacman->lastAttemptedMoveDirection=Left;
-		}
-		else if(dx==0 && dy<0){
-			target_x = current_x;
-			target_y = current_y-2;
-			//pacman->lastAttemptedMoveDirection=Up;
-		}
-		else if(dx>0 && dy==0){
-			target_x = current_x+2;
-			target_y = current_y;
-			//pacman->lastAttemptedMoveDirection=Right;
-		}
-		else if (dx>0 && dy >0){
-			if(rand()%1){
-				target_x = current_x+2;
-				target_y = current_y;
-			}else{
-				target_x = current_x+2;
-				target_y = current_y+2;
-			}
-		}
-		else if (dx<0 && dy>0){
-			if(rand()%1){
-				target_x = current_x-2;
-				target_y = current_y;
-			}else{
-				target_x = current_x-2;
-				target_y = current_y+2;
-			}
-		}
-		else if (dx <0 && dy<0){
-			if(rand()%1){
-				target_x = current_x-2;
-				target_y = current_y;
-			}else{
-				target_x = current_x-2;
-				target_y = current_y-2;
-			}
-		}
-		else if(dx>0 && dy < 0){
-			if(rand()%1){
-				target_x = current_x+2;
-				target_y = current_y;
-			}else{
-				target_x = current_x+2;
-				target_y = current_y-2;
+				NearGhost = g;
 			}
 		}
 
-		if(pacman->godMode)
-		{//TODO: if ghost follow the pacman, pacman will turn around
-			target_x = NearGhost->body.x;
-			target_y = NearGhost->body.y;
+		if (pacman->godMode) {
+			newDir = next_direction_pac(pacman, board, NearGhost->body.x, NearGhost->body.y);
+		}
+		else if (ghost_pac_distance <= Ghost_min_distance)
+		{
+			newDir = next_direction_pac2(pacman, board, NearGhost->body.x, NearGhost->body.y);
+		}
+		else {
+			int minDistance = 10000;
+			for (int i = 0; i < holder->totalNum; i++) {
+				Pellet *p = &holder->pellets[i];
+				int tempdistance = ((pacman->body.x) - (p->x))
+						* ((pacman->body.x) - (p->x))
+						+ ((pacman->body.y) - (p->y)) * ((pacman->body.y) - (p->y));
+				if (!p->eaten && minDistance > tempdistance) {
+					minDistance = tempdistance;
+					target_x = p->x;
+					target_y = p->y;
+				}
+			}
+			newDir = next_direction_pac(pacman, board, target_x, target_y);
 		}
 
-		MovementResult result = move_pac_ai(&pacman->body);
+		//bool dirPressed = dir_pressed_now(&newDir); AI is always pressed
+
+		//user wants to move in a direction
+		pacman->lastAttemptedMoveDirection = newDir;
+
+		//if player holds opposite direction to current walking dir
+		//we can always just switch current walking direction
+		//since we're on parallel line
+		if (newDir == dir_opposite(pacman->body.curDir)) {
+			pacman->body.curDir = newDir;
+			pacman->body.nextDir = newDir;
+		}
+
+		//if pacman was stuck before just set his current direction as pressed
+		if (pacman->movementType == Stuck) {
+			pacman->body.curDir = newDir;
+		}
+
+		pacman->body.nextDir = newDir;
+
+		pacman->movementType = Unstuck;
+
+		int curDirX = 0;
+		int curDirY = 0;
+		int nextDirX = 0;
+		int nextDirY = 0;
+
+		dir_xy(pacman->body.curDir, &curDirX, &curDirY);
+		dir_xy(pacman->body.nextDir, &nextDirX, &nextDirY);
+
+		int newCurX = pacman->body.x + curDirX;
+		int newCurY = pacman->body.y + curDirY;
+		int newNextX = pacman->body.x + nextDirX;
+		int newNextY = pacman->body.y + nextDirY;
+
+		bool canMoveCur = is_valid_square(board, newCurX, newCurY)
+				|| is_tele_square(newCurX, newCurY);
+		bool canMoveNext = is_valid_square(board, newNextX, newNextY)
+				|| is_tele_square(newNextX, newNextY);
+
+		//if pacman is currently on a center tile and can't move in either direction
+		//don't move him
+		if (on_center(&pacman->body) && !canMoveCur && !canMoveNext) {
+			pacman->movementType = Stuck;
+			pacman->lastAttemptedMoveDirection = oldLastAttemptedDir;
+			return;
+		}
+
+		move_pacman(&pacman->body, canMoveCur, canMoveNext);
+
+		//if pacman is on the center, and he couldn't move either of  his last directions
+		//he must be stuck now
+		if (on_center(&pacman->body) && !canMoveCur && !canMoveNext) {
+			pacman->movementType = Stuck;
+			return;
+		}
+
 		resolve_telesquare(&pacman->body);
-		if (result == NewSquare)
-		{
-			pacman->lastAttemptedMoveDirection = next_direction_pac(pacman, &game->board, target_x, target_y);
-		}
-		else if (result == OverCenter)
-		{
-			//they've hit the center of a tile, so change their current direction to the new direction
-			pacman->body.curDir = pacman->transDirection;
-			pacman->body.nextDir = pacman->lastAttemptedMoveDirection;
-			pacman->transDirection = pacman->lastAttemptedMoveDirection;
-		}
-	}
-	else{
-		int minDistance=10000;
-		for (int i = 0; i < holder->totalNum; i++)
-		{
-			Pellet *p = &holder->pellets[i];
-			int tempdistance = ((current_x)-(p->x))*((current_x)-(p->x))+((current_y)-(p->y))*((current_y)-(p->y));
-
-			if (!p->eaten && minDistance > tempdistance){
-				minDistance = tempdistance;
-				target_x = p->x;
-				target_y = p->y;
-			}
-		}
-
-		search_fruit(game, &target_x, &target_y);
-
-		MovementResult result = move_pac_ai(&pacman->body);
-		resolve_telesquare(&pacman->body);
-		if (result == NewSquare)
-		{
-			pacman->lastAttemptedMoveDirection = next_direction_pac(pacman, &game->board, target_x, target_y);
-		}
-		else if (result == OverCenter)
-		{
-			//they've hit the center of a tile, so change their current direction to the new direction
-			pacman->body.curDir = pacman->transDirection;
-			pacman->body.nextDir = pacman->lastAttemptedMoveDirection;
-			pacman->transDirection = pacman->lastAttemptedMoveDirection;
-		}
-	}
-
-	/*
-	MovementResult result = move_pac_ai(&pacman->body);
-	resolve_telesquare(&pacman->body);
-	if (result == NewSquare)
-	{
-		pacman->lastAttemptedMoveDirection = next_direction_pac(pacman, &game->board, target_x, target_y);
-	}
-	else if (result == OverCenter)
-	{
-		//they've hit the center of a tile, so change their current direction to the new direction
-		pacman->body.curDir = pacman->transDirection;
-		pacman->body.nextDir = pacman->lastAttemptedMoveDirection;
-		pacman->transDirection = pacman->lastAttemptedMoveDirection;
-	}
-	*/
 }
 
 void search_fruit(PacmanGame *game, int *target_x, int *target_y ){

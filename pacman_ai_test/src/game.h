@@ -68,3 +68,5 @@ bool AI_PROCESS(PacmanGame *game, Direction *newDir);
 void PROCESS_AI(PacmanGame *game);
 
 void search_fruit(PacmanGame *game, int *target_x, int *target_y );
+
+

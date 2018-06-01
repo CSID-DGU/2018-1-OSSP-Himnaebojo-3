@@ -68,8 +68,8 @@ Direction next_direction_pac(Pacman *pac, Board *board, int target_x, int target
 	//calculate the distances between the squares (or if it is even valid)
 	for (int i = 0; i < 4; i++)
 	{
-		int testX = pac->body.x + x + offsets[i].x;
-		int testY = pac->body.y + y + offsets[i].y;
+		int testX = pac->body.x  + offsets[i].x;
+		int testY = pac->body.y  + offsets[i].y;
 
 		if (testX == 0) testX = 26;
 		if (testX == 27) testX = 1;
@@ -82,7 +82,6 @@ Direction next_direction_pac(Pacman *pac, Board *board, int target_x, int target
 
 		int dx = testX - target_x;
 		int dy = testY - target_y;
-
 		//really the square root, but don't take to keep precision
 		targets[i].distance = (dx * dx + dy * dy);
 	}
@@ -105,4 +104,42 @@ Direction next_direction_pac(Pacman *pac, Board *board, int target_x, int target
 	}
 
 	return shortest.dir;
+}
+Direction next_direction_pac2(Pacman *pac, Board *board, int target_x, int target_y)
+{
+	Targetcalc targets[4] =  { {Up, 0}, {Left, 0}, {Down, 0}, {Right, 0}};
+	Boardoffset offsets[4] = { {0, -1}, {-1, 0}, {0, 1}, {1, 0} };
+
+	//calculate the distances between the squares (or if it is even valid)
+	for (int i = 0; i < 4; i++)
+	{
+		int testX = pac->body.x  + offsets[i].x;
+		int testY = pac->body.y  + offsets[i].y;
+
+		if (testX == 0) testX = 26;
+		if (testX == 27) testX = 1;
+
+		//make sure the square is a valid walkable square
+		if (!(is_valid_square(board, testX, testY) || is_tele_square(testX, testY))) continue;
+
+		int dx = testX - target_x;
+		int dy = testY - target_y;
+		//really the square root, but don't take to keep precision
+		targets[i].distance = (dx * dx + dy * dy);
+	}
+
+	Direction reverseDir = dir_opposite(pac->lastAttemptedMoveDirection);
+	Targetcalc farthest = {Right, 0};
+
+	//iterate backwards so that we get the tie-breaking logic for free
+	for (int i = 3; i >= 0; i--)
+	{
+		if (targets[i].distance > farthest.distance)
+		{
+			farthest.distance = targets[i].distance;
+			farthest.dir = targets[i].dir;
+		}
+	}
+
+	return farthest.dir;
 }

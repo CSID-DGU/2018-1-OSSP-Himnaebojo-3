@@ -52,3 +52,4 @@ int pacman_speed_normal(int level);
 int pacman_speed_fright(int level);
 
 Direction next_direction_pac(Pacman *pac, Board *board, int target_x, int target_y);
+Direction next_direction_pac2(Pacman *pac, Board *board, int target_x, int target_y);
