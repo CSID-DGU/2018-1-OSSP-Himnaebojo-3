@@ -61,6 +61,12 @@ void level_init(PacmanGame *game);
 void pacdeath_init(PacmanGame *game);
 
 //Returns the length of the given integer.
-bool can_move(Pacman *pacman, Board *board, Direction dir);
 int int_length(int num);
+
+bool AI_PROCESS(PacmanGame *game, Direction *newDir);
+
+void PROCESS_AI(PacmanGame *game);
+
 void search_fruit(PacmanGame *game, int *target_x, int *target_y );
+
+
