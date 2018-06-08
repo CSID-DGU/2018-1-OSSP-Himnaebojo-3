@@ -146,7 +146,7 @@ void draw_common_twoup(bool flashing, int score)
 
 	char scoreStr[256];
 	sprintf(scoreStr, "%01i", score);
-	draw_text_coord(get_screen(), scoreStr, 6 - int_length(score), 1);
+	draw_text_coord(get_screen(), scoreStr, 25 - int_length(score), 1);
 }
 
 void draw_common_highscore(int highscore)
@@ -347,22 +347,6 @@ void draw_pacman(Pacman *pacman)
 			draw_image_coord_offset(pacman_ani_bullet_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
 		else//일반모드
 			draw_image_coord_offset(pacman_ani_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
-	}
-	else
-	{
-		if(pacman->bulletOn)//boost + bullet모드
-			draw_image_coord_offset(pacman_ani_bullet_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
-		else//boost모드
-			draw_image_coord_offset(pacman_ani_boost_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
-<<<<<<< HEAD
-=======
-=======
->>>>>>> master
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 	}
 	else
 	{
@@ -373,18 +357,43 @@ void draw_pacman(Pacman *pacman)
 	}
 }
 
-// bulet rendering
-void draw_bullet(Item_bullet* bullet)
+void draw_pacman2(Pacman *pacman)
 {
-	//SDL_Surface* image=get_bullet_image(bullet);
+	int frame;
 
-	draw_image_coord_offset(get_bullet_image(),bullet->body.x,bullet->body.y+2,-5,8);
-}
+	Direction aniDir;
 
-// bulet rendering
-void draw_bullet(Item_bullet* bullet)
-{
-	draw_image_coord_offset(get_bullet_image(),bullet->body.x,bullet->body.y+2,-5,8);
+	if (pacman->movementType == Stuck)
+	{
+		//if left/ down, he needs full open frame
+		//if up/ right, he uses semi-open frame
+		aniDir = pacman->lastAttemptedMoveDirection;
+		if (aniDir == Left || aniDir == Down)
+		{
+			frame = 2;
+		}
+		else
+		{
+			frame = 1;
+		}
+	}
+	else
+	{
+		aniDir = pacman->body.curDir;
+		frame = animation_get_frame(50, 4);
+	}
+
+	int xOffset = pacman->body.xOffset - 4;
+	int yOffset = offset + pacman->body.yOffset - 4;
+
+
+	if(!pacman->boostOn)
+	{
+		if(pacman->bulletOn)
+			draw_image_coord_offset(pacman_ani_bullet_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
+		else
+			draw_image_coord_offset(pacman_ani_image2(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
+	}
 }
 
 // bulet rendering
@@ -399,6 +408,14 @@ void draw_pacman_static(Pacman *pacman)
 	int yOffset = offset + pacman->body.yOffset - 6;
 
 	draw_image_coord_offset(pacman_image(), pacman->body.x, pacman->body.y, xOffset, yOffset);
+}
+
+void draw_pacman_static2(Pacman *pacman)
+{
+	int xOffset = pacman->body.xOffset - 4;
+	int yOffset = offset + pacman->body.yOffset - 6;
+
+	draw_image_coord_offset(pacman_image2(), pacman->body.x, pacman->body.y, xOffset, yOffset);
 }
 
 void draw_pacman_death(Pacman *pacman, unsigned int dt)
@@ -450,6 +467,19 @@ void draw_pacman_lives(int numLives)
 	for (int i = 0; i < numLives; i++)
 	{
 		apply_surface(x, y, pacman_life_image());
+
+		x += 16 * 2;
+	}
+}
+
+void draw_pacman_lives2(int numLives)
+{
+	int x = 8 * 16;
+	int y = 34 * 16;
+
+	for (int i = 0; i < numLives; i++)
+	{
+		apply_surface(x, y, pacman_life_image2());
 
 		x += 16 * 2;
 	}

@@ -188,8 +188,8 @@ void execute_red_logic(Ghost *redGhost, Pacman *pacman)
 	redGhost->targetY = rNum2;
 
 	// Red's AI is to set his target position to pacmans
-	redGhost->targetX = pacman->body.x;
-	redGhost->targetY = pacman->body.y;
+	//redGhost->targetX = pacman->body.x;
+	//redGhost->targetY = pacman->body.y;
 
 	if(redGhost->isDead == 1) {death_send(redGhost);}
 }

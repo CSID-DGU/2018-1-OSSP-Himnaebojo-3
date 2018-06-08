@@ -20,28 +20,20 @@ static void process_player2(PacmanGame *game);
 
 static void process_fruit(PacmanGame *game);
 static void process_item(PacmanGame *game);
-<<<<<<< HEAD
 
-=======
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 static void process_ghosts(PacmanGame *game);
 
 static void process_pellets(PacmanGame *game);
 static void process_pellets2(PacmanGame *game);
 
 
-<<<<<<< HEAD
 //static bool check_pacghost_collision(PacmanGame *game); //return true if pacman collided with any ghosts
 static bool check_pacghost_collision(PacmanGame *game, Pacman *pacman); //return true if pacman collided with any ghosts   //return true if pacman collided with any ghosts
-=======
-  //return true if pacman collided with any ghosts
-
-//static bool check_pacghost_collision(PacmanGame *game); //return true if pacman collided with any ghosts
-static bool check_pacghost_collision(PacmanGame *game, Pacman *pacman); //return true if pacman collided with any ghosts
-
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 static void enter_state(PacmanGame *game, GameState state); //transitions to/ from a state
 static bool resolve_telesquare(PhysicsBody *body);          //wraps the body around if they've gone tele square
+
+void PROCESS_AI(PacmanGame *game);
+void search_fruit(PacmanGame *game, int *target_x, int *target_y );
 
 void game_tick(PacmanGame *game)
 {
@@ -59,41 +51,27 @@ void game_tick(PacmanGame *game)
 			break;
 		case GamePlayState:
 			// everyone can move and this is the standard 'play' game mode
-<<<<<<< HEAD
-=======
-
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 			if(game->pacman.livesLeft>=0){
 				process_player(game);
 				process_pellets(game);
 			}
 
-<<<<<<< HEAD
 			process_item(game);
-=======
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 			process_fruit(game);
 
 			if(game->multiMode && game->pacman2.livesLeft>=0){
-				process_player2(game);
+				if(!game->pveMode)
+					process_player2(game);
+				else
+					PROCESS_AI(game);
+
 				process_pellets2(game);
-<<<<<<< HEAD
-=======
-				//process_fruit2(game);
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
-			}
-
-
-			if(game->pacman.bulletOn==true&&game->bullet.bullet_displaying==true)
-			{
-				process_bullet(game);
 			}
 
 
 			process_ghosts(game);
 
 
-<<<<<<< HEAD
 			if(game->pacman.bulletOn==true&&game->bullet.bullet_displaying==true) process_bullet(game, &game->pacman, &game->bullet);
 			if(game->pacman2.bulletOn==true&&game->bullet2.bullet_displaying==true) process_bullet(game, &game->pacman2, &game->bullet2);
 
@@ -102,13 +80,9 @@ void game_tick(PacmanGame *game)
 			else if (game->pacman.score > game->highscore){
 				game->highscore = game->pacman.score;
 			}
-			else{
+			else if (game->pacman2.score > game->highscore){
 				game->highscore = game->pacman2.score;
 			}
-=======
-			if (game->pacman.score > game->highscore) game->highscore = game->pacman.score;
-			else game->highscore = game->pacman2.score;//TODO:PLAYER2 SCORE
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 
 			break;
 		case WinState:
@@ -165,7 +139,6 @@ void game_tick(PacmanGame *game)
 
 			break;
 		case GamePlayState:
-<<<<<<< HEAD
 			if(!game->multiMode){
 				if (key_held(SDLK_k)) enter_state(game, DeathState);
 				else if (allPelletsEaten) enter_state(game, WinState);
@@ -173,14 +146,6 @@ void game_tick(PacmanGame *game)
 					bullet_effect_eliminate(&game->pacman);
 					enter_state(game, DeathState);
 				}
-=======
-			//TODO: remove this hacks
-			if(!game->multiMode){
-				if (key_held(SDLK_k)) enter_state(game, DeathState);
-
-				else if (allPelletsEaten) enter_state(game, WinState);
-				else if (collidedWithGhost) enter_state(game, DeathState);
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 			}
 			else{
 				if (key_held(SDLK_k)) enter_state(game, DeathState);
@@ -192,20 +157,14 @@ void game_tick(PacmanGame *game)
 
 					}
 					game->pacman.livesLeft--;
-<<<<<<< HEAD
 					bullet_effect_eliminate(&game->pacman);
-=======
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 					//unsigned deathdt = ticks_game();
 					//draw_pacman_death(&game->pacman, 1500 - 1000);
 				}
 				else if (collidedWithGhost2){
 					pacman_location_init_player2(&game->pacman2);
 					game->pacman2.livesLeft--;
-<<<<<<< HEAD
 					bullet_effect_eliminate(&game->pacman2);
-=======
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 					//unsigned dt;
 					//printf("%d\n", dt);
 					//draw_pacman_death(&game->pacman2, deathdt - 1000);
@@ -248,9 +207,14 @@ void game_render(PacmanGame *game)
 	//common stuff that is rendered in every mode:
 	// 1up + score, highscore, base board, lives, small pellets, fruit indicators
 	draw_common_oneup(true, game->pacman.score);
+	if(game->multiMode)
+		draw_common_twoup(true, game->pacman2.score);
+
 	draw_common_highscore(game->highscore);
 
 	draw_pacman_lives(game->pacman.livesLeft);
+	if(game->multiMode)
+		draw_pacman_lives2(game->pacman2.livesLeft);
 
 	draw_small_pellets(&game->pelletHolder);
 	draw_fruit_indicators(game->currentLevel);
@@ -275,7 +239,7 @@ void game_render(PacmanGame *game)
 			//we also draw pacman and ghosts (they are idle currently though)
 			draw_pacman_static(&game->pacman);
 			if(game->multiMode){
-				draw_pacman_static(&game->pacman2);
+				draw_pacman_static2(&game->pacman2);
 			}
 			for (int i = 0; i < 4; i++) draw_ghost(&game->ghosts[i]);
 
@@ -298,18 +262,13 @@ void game_render(PacmanGame *game)
 			if (game->gameFruit4.eaten && ticks_game() - game->gameFruit4.eatenAt < 2000) draw_fruit_pts(&game->gameFruit4);
 			if (game->gameFruit5.eaten && ticks_game() - game->gameFruit5.eatenAt < 2000) draw_fruit_pts(&game->gameFruit5);
 
-<<<<<<< HEAD
-=======
-
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 			if(game->pacman.livesLeft>=0){
 				draw_pacman(&game->pacman);
 			}
 			if(game->multiMode && game->pacman2.livesLeft>=0){
-				draw_pacman(&game->pacman2);
+				draw_pacman2(&game->pacman2);
 			}
 
-<<<<<<< HEAD
 			for(int i=0;i<2;i++)
 			{
 				if(game->item[i].itemMode==Displaying_I)
@@ -322,16 +281,8 @@ void game_render(PacmanGame *game)
 				draw_bullet(&game->bullet);
 			if(game->multiMode && game->bullet2.bullet_displaying==true)
 				draw_bullet(&game->bullet2);
-=======
 
-			if(game->bullet.bullet_displaying==true)
-				draw_bullet(&game->bullet);
-
-		
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
-
-
-			if(game->pacman.godMode == false)
+			if(game->pacman.godMode == false && game->pacman2.godMode == false)
 			{
 				for (int i = 0; i < 4; i++)
 				{
@@ -343,7 +294,7 @@ void game_render(PacmanGame *game)
 				}
 
 			}
-			else
+			else if(game->pacman.godMode == true)
 			{
 				if(godChange == false)
 				{
@@ -374,11 +325,43 @@ void game_render(PacmanGame *game)
 					}
 				}
 			}
+			else
+			{
+				if(godChange == false)
+				{
+					game->pacman2.originDt = ticks_game();
+					godChange = true;
+				}
+				godDt = ticks_game() - game->pacman2.originDt;
+				for (int i = 0; i < 4; i++)
+				{
+					if(game->ghosts[i].isDead == 1)
+					{
+						draw_eyes(&game->ghosts[i]);
+					}
+					else if(draw_scared_ghost(&game->ghosts[i], godDt))
+					{
+						// nothing
+						if(game->ghosts[i].isDead == 2)
+						{
+							draw_ghost(&game->ghosts[i]);
+						}
+					}
+					else
+					{
+						game->pacman2.godMode = false;
+						godChange = false;
+						if(game->ghosts[i].isDead == 2)
+							game->ghosts[i].isDead = 0;
+					}
+				}
+			}
+
 			break;
 		case WinState:
 			draw_pacman_static(&game->pacman);
 			if(game->multiMode){
-				draw_pacman_static(&game->pacman2);
+				draw_pacman_static2(&game->pacman2);
 			}
 
 			if (dt < 2000)
@@ -407,8 +390,8 @@ void game_render(PacmanGame *game)
 			else
 			{
 				//draw the death animation
-				//printf("%d\n", dt);
 				draw_pacman_death(&game->pacman, dt - 1000);
+				draw_pacman_death(&game->pacman2, dt - 1000);
 			}
 
 			draw_large_pellets(&game->pelletHolder, true);
@@ -429,6 +412,9 @@ static void enter_state(PacmanGame *game, GameState state)
 	{
 		case GameBeginState:
 			game->pacman.livesLeft--;
+			if(game->multiMode){
+				game->pacman2.livesLeft--;
+			}
 
 			break;
 		case WinState:
@@ -789,7 +775,6 @@ static void process_fruit(PacmanGame *game)
 	if (f2->fruitMode == Displaying_F)
 	{
 		if (f2dt > f2->displayTime) f2->fruitMode = Displayed_F;
-<<<<<<< HEAD
 	}
 	if (f3->fruitMode == Displaying_F)
 	{
@@ -803,21 +788,6 @@ static void process_fruit(PacmanGame *game)
 	{
 		if (f5dt > f5->displayTime) f5->fruitMode = Displayed_F;
 	}
-=======
-	}
-	if (f3->fruitMode == Displaying_F)
-		{
-			if (f3dt > f3->displayTime) f3->fruitMode = Displayed_F;
-		}
-	if (f4->fruitMode == Displaying_F)
-		{
-			if (f4dt > f4->displayTime) f4->fruitMode = Displayed_F;
-		}
-	if (f5->fruitMode == Displaying_F)
-		{
-			if (f5dt > f5->displayTime) f5->fruitMode = Displayed_F;
-		}
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 
 	//check for collisions
 
@@ -917,10 +887,7 @@ static void process_item(PacmanGame *game)
 		unsigned int itemdt = ticks_game() - item->startedAt;
 
 		Pacman *pac = &game->pacman;
-<<<<<<< HEAD
 		Pacman *pac2 = &game->pacman2;
-=======
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 
 		if (item->itemMode == Displaying_I)
 		{
@@ -931,7 +898,6 @@ static void process_item(PacmanGame *game)
 		//check for collisions
 
 		//Bullet
-<<<<<<< HEAD
 
 		switch(game->multiMode){
 		case 1:
@@ -1004,9 +970,6 @@ static void process_item(PacmanGame *game)
 		}
 
 		/*if (i==0&&item->itemMode == Displaying_I && collides_obj(&pac->body, item->x, item->y))
-=======
-		if (i==0&&item->itemMode == Displaying_I && collides_obj(&pac->body, item->x, item->y))
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 		{
 			item->itemMode = Displayed_I;
 			item->eaten = true;
@@ -1017,12 +980,6 @@ static void process_item(PacmanGame *game)
 		}
 
 		if(i==0&&game->pacman.bulletsLeft==0&&game->bullet.bullet_displaying==false)
-<<<<<<< HEAD
-=======
-
-	
-
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 		{
 			game->pacman.bulletOn=false;
 		}
@@ -1036,21 +993,14 @@ static void process_item(PacmanGame *game)
 
 			LowVelocity_item(game);
 		}
-<<<<<<< HEAD
 
-=======
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 		if(i==1&&(ticks_game()-item->eatenAt)>5000)
 		{
 			for(int j=0;j<4;j++)
 			{
 				game->ghosts[j].body.velocity=80;
 			}
-<<<<<<< HEAD
 		}*/
-=======
-		}
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 	}
 }
 static void process_pellets(PacmanGame *game)
@@ -1145,8 +1095,6 @@ static bool check_pacghost_collision(PacmanGame *game, Pacman *pacman)
 	{
 		Ghost *g = &game->ghosts[i];
 
-
-
 		if (collides(&pacman->body, &g->body)) {
 			if(pacman->godMode == false)
 				return true;
@@ -1161,43 +1109,6 @@ static bool check_pacghost_collision(PacmanGame *game, Pacman *pacman)
 	return false;
 }
 
-<<<<<<< HEAD
-=======
-/*static bool check_pacghost_collision(PacmanGame *game)
-{
-	for (int i = 0; i < 4; i++)
-	{
-		Ghost *g = &game->ghosts[i];
-
-		//switch(g->ghostType) {
-		//case Blinky : printf("red : %d \n", g->isDead); break;
-		//case Inky: printf("blue : %d \n", g->isDead); break;
-		//case Clyde: printf("orange : %d \n", g->isDead); break;
-		//case Pinky: printf("pink : %d \n", g->isDead); break;
-		//}
-
-
-		if (collides(&game->pacman.body, &g->body)) {
-
-			if(game->pacman.godMode == false)
-				return true;
-			else
-			{
-				if(g->isDead == 2)
-				{
-					return true;
-				}
-				g->isDead = 1;
-				death_send(g);
-			}
-
-		}
-	}
-
-	return false;
-}*/
-
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 void gamestart_init(PacmanGame *game)
 {
 	level_init(game);
@@ -1266,29 +1177,7 @@ void pacdeath_init(PacmanGame *game)
 	item_init(game->item,&game->board);
 
 }
-/*
-void pacdeath_init_multi_Player1(PacmanGame *game)
-{
-	if(!game->multiMode){
-		pacman_level_init(&game->pacman);
-	}
-	else
-	{
-		pacman_level_init_multimode(&game->pacman, &game->pacman2);
-	}
-}
 
-void pacdeath_init_multi_Player2(PacmanGame *game)
-{
-	if(!game->multiMode){
-		pacman_level_init(&game->pacman);
-	}
-	else
-	{
-		pacman_level_init_multimode(&game->pacman, &game->pacman2);
-	}
-}
-*/
 //TODO: make this method based on a state, not a conditional
 //or make the menu system the same. Just make it consistant
 bool is_game_over(PacmanGame *game)
@@ -1312,6 +1201,7 @@ int int_length(int x)
     return 1;
 }
 
+
 static bool resolve_telesquare(PhysicsBody *body)
 {
 	//TODO: chuck this back in the board class somehow
@@ -1325,7 +1215,6 @@ static bool resolve_telesquare(PhysicsBody *body)
 }
 
 
-<<<<<<< HEAD
 void process_bullet(PacmanGame *game,Pacman *pacman, Item_bullet *bullet)
 {
 	MovementResult result = move_bullet(&bullet->body);
@@ -1346,79 +1235,196 @@ void process_bullet(PacmanGame *game,Pacman *pacman, Item_bullet *bullet)
 			if(game->ghosts[i].isDead!=1)
 			{
 				bullet->bullet_displaying=false;
-=======
-void process_bullet(PacmanGame* game)
-{
-	MovementResult result = move_bullet(&game->bullet.body);
-
-	if (result == NewSquare)
-	{
-		game->bullet.body.nextDir = game->bullet.body.curDir;
-	}
-	else if (result == OverCenter)
-	{
-		game->bullet.body.nextDir = game->bullet.body.curDir;
-	}
-
-
-	for(int i=0;i<4;i++)
-	{
-		if (game->bullet.bullet_displaying == true && collides(&game->ghosts[i].body,&game->bullet.body))
-		{
-			if(game->ghosts[i].isDead!=1)
-			{
-				game->bullet.bullet_displaying=false;
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 				game->ghosts[i].isDead = 1;
 			}
 		}
 	}
-<<<<<<< HEAD
 	if(!is_valid_square(&game->board, bullet->body.x, bullet->body.y))
 	{
 		bullet->bullet_displaying=false;
-=======
-	if(!is_valid_square(&game->board,game->bullet.body.x,game->bullet.body.y))
-	{
-		game->bullet.bullet_displaying=false;
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 	}
-
 
 }
 
-<<<<<<< HEAD
 void bullet_effect_eliminate(Pacman *pac){
 	pac->bulletOn = false;
 	pac->bulletsLeft = 0;
 }
-
+int int_length2(int x)
+{
+    if (x >= 1000000000) return 10;
+    if (x >= 100000000)  return 9;
+    if (x >= 10000000)   return 8;
+    if (x >= 1000000)    return 7;
+    if (x >= 100000)     return 6;
+    if (x >= 10000)      return 5;
+    if (x >= 1000)       return 4;
+    if (x >= 100)        return 3;
+    if (x >= 10)         return 2;
+    return 1;
+}
 void bullet_init(Item_bullet* bullet, Pacman* pac)
 {
 	bullet->body = pac->body;
-=======
-void bullet_init(Item_bullet* bullet,PacmanGame* game)
-{
-	bullet->body =game->pacman.body;
-
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 	bullet->body.velocity = 200;
 	bullet->bullet_displaying=true;
 }
 
-<<<<<<< HEAD
-=======
-
-
-}
-
-
-
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 void LowVelocity_item(PacmanGame *game)
 {
 	for(int i=0;i<4;i++)
 	{
 		game->ghosts[i].body.velocity=40;
+	}
+}
+
+void PROCESS_AI(PacmanGame *game){
+	Pacman *pacman = &game->pacman2;
+	Board *board = &game->board;
+	Ghost *NearGhost;
+	PelletHolder *holder = &game->pelletHolder;
+	Direction oldLastAttemptedDir = pacman->lastAttemptedMoveDirection;
+	Direction newDir;
+	int target_x;
+	int target_y;
+
+		if (pacman->missedFrames != 0) {
+			pacman->missedFrames--;
+			return;
+		}
+
+		int ghost_pac_distance = 10000;
+		int Ghost_min_distance = 25;
+		for (int i = 0; i < 4; i++) {
+			Ghost *g = &game->ghosts[i];
+			int tempdistance_with_ghost = (g->body.x - pacman->body.x)
+					* (g->body.x - pacman->body.x)
+					+ (g->body.y - pacman->body.y) * (g->body.y - pacman->body.y);
+			if (ghost_pac_distance > tempdistance_with_ghost) {
+				ghost_pac_distance = tempdistance_with_ghost;
+				NearGhost = g;
+			}
+		}
+
+
+		if (ghost_pac_distance <= Ghost_min_distance)
+		{
+			 if (pacman->godMode && (NearGhost->isDead != 1))
+			 {
+			 	newDir = next_direction_pac(pacman, board, NearGhost->body.x, NearGhost->body.y);
+			 	printf("chase\n");
+			 }
+			 else
+			 {
+				newDir = next_direction_pac2(pacman, board, NearGhost->body.x, NearGhost->body.y);
+				printf("run away\n");
+			 }
+		}
+		else {
+			int minDistance = 10000;
+			for (int i = 0; i < holder->totalNum; i++) {
+				Pellet *p = &holder->pellets[i];
+				int tempdistance = ((pacman->body.x) - (p->x))
+						* ((pacman->body.x) - (p->x))
+						+ ((pacman->body.y) - (p->y)) * ((pacman->body.y) - (p->y));
+				if (!p->eaten && minDistance > tempdistance) {
+					minDistance = tempdistance;
+					target_x = p->x;
+					target_y = p->y;
+				}
+			}
+			search_fruit(game, &target_x, &target_y); //priority fruit >  pellet
+			//printf("target_x : %d, target_y : %d", target_x, target_y);
+
+			newDir = next_direction_pac(pacman, board, target_x, target_y);
+		}
+
+		//bool dirPressed = dir_pressed_now(&newDir); AI is always pressed
+
+		//user wants to move in a direction
+		pacman->lastAttemptedMoveDirection = newDir;
+
+		if (newDir == dir_opposite(pacman->body.curDir)) {
+			pacman->body.curDir = newDir;
+			pacman->body.nextDir = newDir;
+		}
+
+		//if pacman was stuck before just set his current direction as pressed
+		if (pacman->movementType == Stuck) {
+			pacman->body.curDir = newDir;
+		}
+
+		pacman->body.nextDir = newDir;
+
+		pacman->movementType = Unstuck;
+
+		int curDirX = 0;
+		int curDirY = 0;
+		int nextDirX = 0;
+		int nextDirY = 0;
+
+		dir_xy(pacman->body.curDir, &curDirX, &curDirY);
+		dir_xy(pacman->body.nextDir, &nextDirX, &nextDirY);
+
+		int newCurX = pacman->body.x + curDirX;
+		int newCurY = pacman->body.y + curDirY;
+		int newNextX = pacman->body.x + nextDirX;
+		int newNextY = pacman->body.y + nextDirY;
+
+		bool canMoveCur = is_valid_square(board, newCurX, newCurY)
+				|| is_tele_square(newCurX, newCurY);
+		bool canMoveNext = is_valid_square(board, newNextX, newNextY)
+				|| is_tele_square(newNextX, newNextY);
+
+		//if pacman is currently on a center tile and can't move in either direction
+		//don't move him
+		if (on_center(&pacman->body) && !canMoveCur && !canMoveNext) {
+			pacman->movementType = Stuck;
+			pacman->lastAttemptedMoveDirection = oldLastAttemptedDir;
+			return;
+		}
+
+		move_pacman(&pacman->body, canMoveCur, canMoveNext);
+
+		//if pacman is on the center, and he couldn't move either of  his last directions
+		//he must be stuck now
+		if (on_center(&pacman->body) && !canMoveCur && !canMoveNext) {
+			pacman->movementType = Stuck;
+			return;
+		}
+
+		resolve_telesquare(&pacman->body);
+}
+
+void search_fruit(PacmanGame *game, int *target_x, int *target_y ){
+	GameFruit *f1 = &game->gameFruit1;
+	GameFruit *f2 = &game->gameFruit2;
+	GameFruit *f3 = &game->gameFruit3;
+	GameFruit *f4 = &game->gameFruit4;
+	GameFruit *f5 = &game->gameFruit5;
+
+	if(f1->fruitMode == Displaying_F){
+		*target_x = f1->x;
+		*target_y = f1->y;
+	}
+
+	else if(f2->fruitMode == Displaying_F){
+		*target_x = f2->x;
+		*target_y = f2->y;
+	}
+
+	else if(f3->fruitMode == Displaying_F){
+		*target_x = f3->x;
+		*target_y = f3->y;
+	}
+
+	else if(f4->fruitMode == Displaying_F){
+		*target_x = f4->x;
+		*target_y = f4->y;
+	}
+
+	else if(f5->fruitMode == Displaying_F){
+		*target_x = f5->x;
+		*target_y = f5->y;
 	}
 }

@@ -217,7 +217,6 @@ static void key_down_hacks(int keycode)
 		}
 	}
 
-<<<<<<< HEAD
 	if(pacmanGame.pacman.bulletOn==true&&pacmanGame.bullet.bullet_displaying==false&&keycode==SDLK_SLASH)//bullet모드일 경우 '/' 누르면 총알 발사
 	{
 		pacmanGame.pacman.bulletsLeft--;
@@ -228,16 +227,6 @@ static void key_down_hacks(int keycode)
 	{
 		pacmanGame.pacman2.bulletsLeft--;
 		bullet_init(&pacmanGame.bullet2, &pacmanGame.pacman2);
-=======
-<<<<<<< HEAD
-	if(pacmanGame.pacman.bulletOn==true&&pacmanGame.bullet.bullet_displaying==false&&keycode==SDLK_SLASH)//bullet모드일 경우 '/' 누르면 총알 발사
-=======
-	if(pacmanGame.pacman.bulletOn==true&&keycode==SDLK_SLASH)//bullet모드일 경우 '/' 누르면 총알 발사
->>>>>>> master
-	{
-		pacmanGame.pacman.bulletsLeft--;
-		bullet_init(&pacmanGame.bullet,&pacmanGame);
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 	}
 
 	//TODO: move logic into the tick method of the menu
@@ -246,16 +235,25 @@ static void key_down_hacks(int keycode)
 		numCredits++;
 	}
 
-	if (state == Menu && keycode == SDLK_2)
-	{
-		pacmanGame.multiMode=1;
-		printf("MULTIMODE FLAG ON\n");
-	}
-
 	if (state == Menu && keycode == SDLK_1)
 	{
 		pacmanGame.multiMode=0;
-		printf("MULTIMODE FLAG OFF\n");
+		pacmanGame.multiMode=0;
+		printf("Single Mode\n");
+	}
+
+	if (state == Menu && keycode == SDLK_2)
+	{
+		pacmanGame.multiMode=1;
+		pacmanGame.pveMode=0;
+		printf("MULTI MODE\n");
+	}
+
+	if (state == Menu && keycode == SDLK_3)
+	{
+		pacmanGame.multiMode=1;
+		pacmanGame.pveMode=1;
+		printf("PVE Mode\n");
 	}
 
 	if (keycode == SDLK_9)

@@ -40,14 +40,7 @@ typedef struct
 typedef struct
 {
 	PhysicsBody body;
-<<<<<<< HEAD
 	bool bullet_displaying;
-=======
-<<<<<<< HEAD
-	bool bullet_displaying;
-=======
->>>>>>> master
->>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 } Item_bullet;
 
 
