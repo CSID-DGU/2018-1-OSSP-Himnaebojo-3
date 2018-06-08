@@ -116,8 +116,10 @@ Direction next_direction_pac2(Pacman *pac, Board *board, int target_x, int targe
 		int testX = pac->body.x  + offsets[i].x;
 		int testY = pac->body.y  + offsets[i].y;
 
+
 		if (testX == 0 &&testY==14) testX = 26;
 		if (testX == 27&&testY==14) testX = 1;
+
 
 		//make sure the square is a valid walkable square
 		if (!(is_valid_square(board, testX, testY) || is_tele_square(testX, testY))) continue;

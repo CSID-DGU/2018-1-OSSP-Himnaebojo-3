@@ -110,6 +110,7 @@ bool dir_pressed_now2(Direction *dir)
 	return highestPushed != 0;
 }
 
+
 bool key_held(int keycode)
 {
 	check_keycode(keycode);

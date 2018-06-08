@@ -2,6 +2,7 @@
 
 #include "board.h"
 #include "fruit.h"
+#include "item.h"
 #include "ghost.h"
 #include "pacman.h"
 #include "pellet.h"
@@ -38,6 +39,12 @@ typedef struct
 	Board board;
 	PelletHolder pelletHolder;
 	GameFruit gameFruit1, gameFruit2, gameFruit3, gameFruit4, gameFruit5;
+	GameItem item[2];
+	Item_bullet bullet;
+<<<<<<< HEAD
+	Item_bullet bullet2;
+=======
+>>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
 	int highscore;
 	int currentLevel;
 	int multiMode;
@@ -63,3 +70,15 @@ void pacdeath_init(PacmanGame *game);
 
 //Returns the length of the given integer.
 int int_length(int num);
+
+<<<<<<< HEAD
+//void bullet_init(Item_bullet* bullet,PacmanGame* game);
+void bullet_init(Item_bullet* bullet, Pacman* pac);
+//void process_bullet(PacmanGame* game);
+void process_bullet(PacmanGame *game,Pacman *pacman, Item_bullet *bullet);
+=======
+void bullet_init(Item_bullet* bullet,PacmanGame* game);
+void process_bullet(PacmanGame* game);
+>>>>>>> cf13d40c95e1630a99d34a658e66cf9b0cb324af
+
+void LowVelocity_item(PacmanGame *game);
