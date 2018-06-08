@@ -10,6 +10,7 @@ typedef enum
 {
 	LevelStartSound,
 	BulletSound,
+	BulletItemSound,
 	DeathSound,
 	EatingFruitSound,
 	EatingPelletSound,

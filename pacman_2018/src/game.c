@@ -121,8 +121,14 @@ void game_tick(PacmanGame *game)
 		case DeathState:
 			if (dt > 4000)
 			{
-				if (lives == 0) enter_state(game, GameoverState);
-				else enter_state(game, LevelBeginState);
+				if (lives == 0)
+				{
+					enter_state(game, GameoverState);
+				}
+				else
+				{
+					enter_state(game, LevelBeginState);
+				}
 			}
 
 			break;
@@ -308,6 +314,7 @@ static void enter_state(PacmanGame *game, GameState state)
 			break;
 		case DeathState:
 			// Player died and is starting a new game, subtract a life
+			play_sound(DeathSound);
 			if (state == LevelBeginState)
 			{
 				game->pacman.livesLeft--;
@@ -321,10 +328,11 @@ static void enter_state(PacmanGame *game, GameState state)
 	switch (state)
 	{
 		case GameBeginState:
-			play_sound(LevelStartSound);
+			play_sound(LoseSound);
 			break;
 		case LevelBeginState:
-			play_sound(LevelStartSound);
+			if(game->currentLevel!=1)
+				play_sound(LevelStartSound);
 			break;
 		case GamePlayState:
 
@@ -333,7 +341,6 @@ static void enter_state(PacmanGame *game, GameState state)
 			play_sound(WinSound);
 			break;
 		case DeathState:
-			play_sound(DeathSound);
 			break;
 		case GameoverState:
 			play_sound(LoseSound);
@@ -658,6 +665,7 @@ static void process_item(PacmanGame *game)
 		//Bullet
 		if (i==0&&item->itemMode == Displaying_I && collides_obj(&pac->body, item->x, item->y))
 		{
+			play_sound(BulletItemSound);
 			item->itemMode = Displayed_I;
 			item->eaten = true;
 			item->eatenAt = ticks_game();
@@ -673,6 +681,7 @@ static void process_item(PacmanGame *game)
 		//LowVelocity
 		if (i==1&&item->itemMode == Displaying_I && collides_obj(&pac->body, item->x, item->y))
 		{
+			play_sound(SpeedDownSound);
 			item->itemMode = Displayed_I;
 			item->eaten = true;
 			item->eatenAt = ticks_game();
@@ -706,7 +715,10 @@ static void process_pellets(PacmanGame *game)
 
 		if (collides_obj(&game->pacman.body, p->x, p->y))
 		{
-			play_sound(EatingPelletSound);
+			if(!pellet_check(p))
+			{
+				play_sound(EatingPelletSound);
+			}
 
 			holder->numLeft--;
 
@@ -723,10 +735,6 @@ static void process_pellets(PacmanGame *game)
 						game->ghosts[j].isDead = 0;
 				}
 			}
-
-
-
-			//TODO play eat sound
 
 			//eating a small pellet makes pacman not move for 1 frame
 			//eating a large pellet makes pacman not move for 3 frames

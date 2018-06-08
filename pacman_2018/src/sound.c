@@ -14,6 +14,7 @@ static Mix_Music *music;
 
 static Mix_Chunk *levelStart;
 static Mix_Chunk *bullet;
+static Mix_Chunk *bulletItem;
 static Mix_Chunk *death;
 static Mix_Chunk *eatingFruit;
 static Mix_Chunk *eatingPellet;
@@ -24,6 +25,7 @@ static Mix_Chunk *win;
 
 static int levelStartChanel;
 static int bulletChanel;
+static int bulletItemChanel;
 static int deathChanel;
 static int eatingFruitChanel;
 static int eatingPelletChanel;
@@ -55,6 +57,7 @@ void load_sounds(void)
 
 	levelStart = Mix_LoadWAV("sound/Level_Start.wav");
 	bullet=Mix_LoadWAV("sound/Bullet.wav");
+	bulletItem=Mix_LoadWAV("sound/BulletItem.wav");
 	death=Mix_LoadWAV("sound/Death.wav");
 	eatingFruit=Mix_LoadWAV("sound/Eating_Fruit.wav");
 	eatingPellet=Mix_LoadWAV("sound/Eating_Pellet.wav");
@@ -117,39 +120,43 @@ void play_sound(SoundEffect effectName)
 
 	switch (effectName)
 	{
-		case LevelStartSound:
+		case LevelStartSound://level Start 시
 			chunk = levelStart;
 			channel = &levelStartChanel;
 			break;
-		case BulletSound:
+		case BulletSound://총알 발사 시
 			chunk=bullet;
 			channel=&bulletChanel;
 			break;
-		case DeathSound:
+		case BulletItemSound://총알 아이템 먹었을 시
+			chunk=bulletItem;
+			channel=&bulletItemChanel;
+			break;
+		case DeathSound://DeathState로 들어갈 시
 			chunk=death;
 			channel=&deathChanel;
 			break;
-		case EatingFruitSound:
+		case EatingFruitSound://Fruit 먹었을 시
 			chunk=eatingFruit;
 			channel=&eatingFruitChanel;
 			break;
-		case EatingPelletSound:
+		case EatingPelletSound://Pellet 먹었을 시
 			chunk=eatingPellet;
 			channel=&eatingPelletChanel;
 			break;
-		case GodModeSound:
+		case GodModeSound://BigPellet 먹었을 시
 			chunk=GodMode;
 			channel=&GodModeChanel;
 			break;
-		case LoseSound:
+		case LoseSound://GameOverState로 들어갈 시
 			chunk=lose;
 			channel=&loseChanel;
 			break;
-		case SpeedDownSound:
+		case SpeedDownSound://속도저하 아이템 먹었을 시
 			chunk=speedDown;
 			channel=&speedDownChanel;
 			break;
-		case WinSound:
+		case WinSound://WinState로 들어갈 시
 			chunk=win;
 			channel=&winChanel;
 			break;
