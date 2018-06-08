@@ -21,6 +21,7 @@ static void process_item(PacmanGame *game);
 static void process_ghosts(PacmanGame *game);
 static void process_pellets(PacmanGame *game);
 
+
 static bool check_pacghost_collision(PacmanGame *game);     //return true if pacman collided with any ghosts
 static void enter_state(PacmanGame *game, GameState state); //transitions to/ from a state
 static bool resolve_telesquare(PhysicsBody *body);          //wraps the body around if they've gone tele square
@@ -46,10 +47,12 @@ void game_tick(PacmanGame *game)
 			process_item(game);
 			process_fruit(game);
 			process_pellets(game);
-			if(game->pacman.bulletOn==true)
+
+			if(game->pacman.bulletOn==true&&game->bullet.bullet_displaying==true)
 			{
 				process_bullet(game);
 			}
+
 
 			if (game->pacman.score > game->highscore) game->highscore = game->pacman.score;
 
@@ -199,8 +202,8 @@ void game_render(PacmanGame *game)
 
 			draw_pacman(&game->pacman);
 
-			draw_bullet(&game->bullet);
-
+			if(game->bullet.bullet_displaying==true)
+				draw_bullet(&game->bullet);
 
 			if(game->pacman.godMode == false)
 			{
@@ -319,19 +322,21 @@ static void enter_state(PacmanGame *game, GameState state)
 	{
 		case GameBeginState:
 			play_sound(LevelStartSound);
-
 			break;
 		case LevelBeginState:
-			
+			play_sound(LevelStartSound);
 			break;
 		case GamePlayState:
-			break;
-		case WinState:
 
 			break;
+		case WinState:
+			play_sound(WinSound);
+			break;
 		case DeathState:
+			play_sound(DeathSound);
 			break;
 		case GameoverState:
+			play_sound(LoseSound);
 			break;
 	}
 
@@ -584,6 +589,7 @@ static void process_fruit(PacmanGame *game)
 		f1->eaten = true;
 		f1->eatenAt = ticks_game();
 		pac->score += fruit_points(f1->fruit);
+		play_sound(EatingFruitSound);
 	}
 
 	if (f2->fruitMode == Displaying_F && collides_obj(&pac->body, f2->x, f2->y))
@@ -592,6 +598,8 @@ static void process_fruit(PacmanGame *game)
 		f2->eaten = true;
 		f2->eatenAt = ticks_game();
 		pac->score += fruit_points(f2->fruit);
+		play_sound(EatingFruitSound);
+
 	}
 	if (f3->fruitMode == Displaying_F && collides_obj(&pac->body, f3->x, f3->y))
 	{
@@ -599,6 +607,8 @@ static void process_fruit(PacmanGame *game)
 		f3->eaten = true;
 		f3->eatenAt = ticks_game();
 		pac->score += fruit_points(f3->fruit);
+		play_sound(EatingFruitSound);
+
 	}
 	if (f4->fruitMode == Displaying_F && collides_obj(&pac->body, f4->x, f4->y))
 	{
@@ -606,6 +616,8 @@ static void process_fruit(PacmanGame *game)
 		f4->eaten = true;
 		f4->eatenAt = ticks_game();
 		pac->score += fruit_points(f4->fruit);
+		play_sound(EatingFruitSound);
+
 	}
 	if (f5->fruitMode == Displaying_F && collides_obj(&pac->body, f5->x, f5->y))
 	{
@@ -613,6 +625,8 @@ static void process_fruit(PacmanGame *game)
 		f5->eaten = true;
 		f5->eatenAt = ticks_game();
 		pac->score += fruit_points(f5->fruit);
+		play_sound(EatingFruitSound);
+
 	}
 
 }
@@ -651,7 +665,7 @@ static void process_item(PacmanGame *game)
 			game->pacman.bulletOn=true;
 			game->pacman.bulletsLeft=5;
 		}
-		if(i==0&&game->pacman.bulletsLeft==0)
+		if(i==0&&game->pacman.bulletsLeft==0&&game->bullet.bullet_displaying==false)
 		{
 			game->pacman.bulletOn=false;
 		}
@@ -692,20 +706,27 @@ static void process_pellets(PacmanGame *game)
 
 		if (collides_obj(&game->pacman.body, p->x, p->y))
 		{
+			play_sound(EatingPelletSound);
+
 			holder->numLeft--;
 
 			p->eaten = true;
 			game->pacman.score += pellet_points(p);
-			if(pellet_check(p)) {
+			if(pellet_check(p))
+			{
 				game->pacman.godMode = true;
+				play_sound(GodModeSound);
 				game->pacman.originDt = ticks_game();
-				for(j = 0; j< 4; j++) {
+				for(j = 0; j< 4; j++)
+				{
 					if(game->ghosts[j].isDead == 2)
 						game->ghosts[j].isDead = 0;
 				}
 			}
 
-			//play eat sound
+
+
+			//TODO play eat sound
 
 			//eating a small pellet makes pacman not move for 1 frame
 			//eating a large pellet makes pacman not move for 3 frames
@@ -733,14 +754,23 @@ static bool check_pacghost_collision(PacmanGame *game)
 		}
 		*/
 
-		if (collides(&game->pacman.body, &g->body)) {
+		if (collides(&game->pacman.body, &g->body))
+		{
+			if(g->isDead==1)
+				return false;
+
 			if(game->pacman.godMode == false)
 				return true;
-			else {
-				if(g->isDead == 2) {return true;}
+			else
+			{
+				if(g->isDead == 2)
+				{
+					return true;
+				}
 				g->isDead = 1;
 				death_send(g);
 			}
+
 		}
 	}
 
@@ -849,14 +879,30 @@ void process_bullet(PacmanGame* game)
 	{
 		game->bullet.body.nextDir = game->bullet.body.curDir;
 	}
+
+	for(int i=0;i<4;i++)
+	{
+		if (game->bullet.bullet_displaying == true && collides(&game->ghosts[i].body,&game->bullet.body))
+		{
+			if(game->ghosts[i].isDead!=1)
+			{
+				game->bullet.bullet_displaying=false;
+				game->ghosts[i].isDead = 1;
+			}
+		}
+	}
+	if(!is_valid_square(&game->board,game->bullet.body.x,game->bullet.body.y))
+	{
+		game->bullet.bullet_displaying=false;
+	}
 }
 
 void bullet_init(Item_bullet* bullet,PacmanGame* game)
 {
 	bullet->body =game->pacman.body;
-	bullet->body.velocity = 140;
+	bullet->body.velocity = 200;
+	bullet->bullet_displaying=true;
 }
-
 
 void LowVelocity_item(PacmanGame *game)
 {

@@ -14,7 +14,7 @@ void item_init(GameItem gameitem[2],Board* board)
 	gameitem[0].item = Bullet;
 	gameitem[1].item = LowVelocity;
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		reset_item(&gameitem[i], gameitem[i].item, board);
 	}
