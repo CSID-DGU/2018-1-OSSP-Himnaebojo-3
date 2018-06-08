@@ -914,12 +914,17 @@ void PROCESS_AI(PacmanGame *game){
 			}
 		}
 
-		if (pacman->godMode) {
-			newDir = next_direction_pac(pacman, board, NearGhost->body.x, NearGhost->body.y);
-		}
-		else if (ghost_pac_distance <= Ghost_min_distance)
-		{
-			newDir = next_direction_pac2(pacman, board, NearGhost->body.x, NearGhost->body.y);
+	  if (ghost_pac_distance <= Ghost_min_distance)
+	  {
+			 if (pacman->godMode && (NearGhost->isDead != 1))
+			 {
+			 	newDir = next_direction_pac(pacman, board, NearGhost->body.x, NearGhost->body.y);
+			 }
+			 else
+			 {
+				 newDir = next_direction_pac2(pacman, board, NearGhost->body.x, NearGhost->body.y);
+			 }
+
 		}
 		else {
 			int minDistance = 10000;
