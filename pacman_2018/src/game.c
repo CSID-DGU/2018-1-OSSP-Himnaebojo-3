@@ -110,7 +110,11 @@ void game_tick(PacmanGame *game)
 			if (key_held(SDLK_k)) enter_state(game, DeathState);
 
 			else if (allPelletsEaten) enter_state(game, WinState);
-			else if (collidedWithGhost) enter_state(game, DeathState);
+			else if (collidedWithGhost)
+			{
+				play_sound(DeathSound);
+				enter_state(game, DeathState);
+			}
 
 			break;
 		case WinState:
@@ -314,7 +318,6 @@ static void enter_state(PacmanGame *game, GameState state)
 			break;
 		case DeathState:
 			// Player died and is starting a new game, subtract a life
-			play_sound(DeathSound);
 			if (state == LevelBeginState)
 			{
 				game->pacman.livesLeft--;
@@ -328,7 +331,7 @@ static void enter_state(PacmanGame *game, GameState state)
 	switch (state)
 	{
 		case GameBeginState:
-			play_sound(LoseSound);
+			play_sound(LevelStartSound);
 			break;
 		case LevelBeginState:
 			if(game->currentLevel!=1)
@@ -768,7 +771,9 @@ static bool check_pacghost_collision(PacmanGame *game)
 				return false;
 
 			if(game->pacman.godMode == false)
+			{
 				return true;
+			}
 			else
 			{
 				if(g->isDead == 2)
@@ -776,6 +781,7 @@ static bool check_pacghost_collision(PacmanGame *game)
 					return true;
 				}
 				g->isDead = 1;
+				play_sound(PacGhostSound);
 				death_send(g);
 			}
 

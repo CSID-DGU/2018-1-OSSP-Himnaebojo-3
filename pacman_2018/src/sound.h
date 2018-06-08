@@ -15,6 +15,7 @@ typedef enum
 	EatingFruitSound,
 	EatingPelletSound,
 	GodModeSound,
+	PacGhostSound,
 	LoseSound,
 	SpeedDownSound,
 	WinSound

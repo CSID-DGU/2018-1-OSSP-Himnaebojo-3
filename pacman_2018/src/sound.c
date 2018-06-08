@@ -19,6 +19,7 @@ static Mix_Chunk *death;
 static Mix_Chunk *eatingFruit;
 static Mix_Chunk *eatingPellet;
 static Mix_Chunk *GodMode;
+static Mix_Chunk *PacGhost;
 static Mix_Chunk *lose;
 static Mix_Chunk *speedDown;
 static Mix_Chunk *win;
@@ -30,6 +31,7 @@ static int deathChanel;
 static int eatingFruitChanel;
 static int eatingPelletChanel;
 static int GodModeChanel;
+static int PacGhostChanel;
 static int loseChanel;
 static int speedDownChanel;
 static int winChanel;
@@ -62,6 +64,7 @@ void load_sounds(void)
 	eatingFruit=Mix_LoadWAV("sound/Eating_Fruit.wav");
 	eatingPellet=Mix_LoadWAV("sound/Eating_Pellet.wav");
 	GodMode=Mix_LoadWAV("sound/God_Mode.wav");
+	PacGhost=Mix_LoadWAV("sound/PacGhost.wav");
 	lose=Mix_LoadWAV("sound/Lose.wav");
 	speedDown=Mix_LoadWAV("sound/SpeedDown.wav");
 	win=Mix_LoadWAV("sound/Win.wav");
@@ -147,6 +150,10 @@ void play_sound(SoundEffect effectName)
 		case GodModeSound://BigPellet 먹었을 시
 			chunk=GodMode;
 			channel=&GodModeChanel;
+			break;
+		case PacGhostSound:
+			chunk=PacGhost;
+			channel=&PacGhostChanel;
 			break;
 		case LoseSound://GameOverState로 들어갈 시
 			chunk=lose;
