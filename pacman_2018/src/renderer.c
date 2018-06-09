@@ -559,12 +559,11 @@ void draw_fruit_pts(GameFruit *gameFruit)
 	draw_image_coord(image, gameFruit->x, gameFruit->y + 3);
 }
 
-void draw_ghost_pts(GameFruit *gameFruit)
+void draw_ghost_pts(Ghost *Ghost)
 {
-	Fruit f = gameFruit->fruit;
-	SDL_Surface *image = get_fruit_score_image(f);
+	SDL_Surface *image = get_ghost_score_image();
 
-	draw_image_coord(image, gameFruit->x, gameFruit->y + 3);
+	draw_image_coord(image, Ghost->deathPoint_x, Ghost->deathPoint_y);
 }
 
 //

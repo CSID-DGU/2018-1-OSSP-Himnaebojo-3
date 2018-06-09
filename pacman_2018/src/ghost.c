@@ -52,6 +52,7 @@ void reset_ghost(Ghost *ghost, GhostType type)
 	ghost->transDirection = Left;
 	ghost->nextDirection = Left;
 	ghost->isDead = false;
+	ghost->DeadAt = 0;
 }
 
 void send_to_home(Ghost *ghost, GhostType type)
@@ -178,6 +179,37 @@ void execute_ghost_logic(Ghost *targetGhost, GhostType type, Ghost *redGhost, Pa
 	}
 }
 
+void execute_ghost_logic2(Ghost *targetGhost, GhostType type, Ghost *redGhost, Pacman *pacman, Pacman *pacman2)
+{
+	if (targetGhost->movementMode == Scatter)
+	{
+		send_to_home(targetGhost, type);
+		return;
+	}
+
+	if(pacman->livesLeft>0){
+		switch (type)
+		{
+			case Blinky: execute_red_logic(targetGhost, pacman);            break;
+			case Inky:   execute_blue_logic(targetGhost, redGhost, pacman); break;
+			case Clyde:  execute_orange_logic(targetGhost, pacman);         break;
+			case Pinky:  execute_pink_logic(targetGhost, pacman);           break;
+		}
+	}
+	else{
+		switch (type)
+		{
+			case Blinky: execute_red_logic(targetGhost, pacman2);            break;
+			case Inky:   execute_blue_logic(targetGhost, redGhost, pacman2); break;
+			case Clyde:  execute_orange_logic(targetGhost, pacman2);         break;
+			case Pinky:  execute_pink_logic(targetGhost, pacman2);           break;
+		}
+	}
+
+
+
+}
+
 void execute_red_logic(Ghost *redGhost, Pacman *pacman)
 {
 	// Red's Ai is random x, y
@@ -188,8 +220,10 @@ void execute_red_logic(Ghost *redGhost, Pacman *pacman)
 	redGhost->targetY = rNum2;
 
 	// Red's AI is to set his target position to pacmans
-	//redGhost->targetX = pacman->body.x;
-	//redGhost->targetY = pacman->body.y;
+	if(rand()%2 - 1){
+		redGhost->targetX = pacman->body.x;
+		redGhost->targetY = pacman->body.y;
+	}
 
 	if(redGhost->isDead == 1) {death_send(redGhost);}
 }

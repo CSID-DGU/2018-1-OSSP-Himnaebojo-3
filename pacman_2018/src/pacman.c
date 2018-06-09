@@ -14,7 +14,7 @@ void pacman_init(Pacman *pacman)
 	pacman->bulletOn=false;
 }
 
-void pacman_init_multiMode(Pacman *pacman1, Pacman *pacman2)
+void pacman_init_multiMode(Pacman *pacman1, Pacman *pacman2, int PveMode)
 {
 	pacman_level_init_multimode(pacman1, pacman2);
 
@@ -31,6 +31,11 @@ void pacman_init_multiMode(Pacman *pacman1, Pacman *pacman2)
 	pacman2->missedFrames = 0;
 	pacman2->godMode = false;
 	pacman2->boostOn = false;
+
+	if(PveMode){
+		pacman2->body.velocity=90;
+	}
+
 }
 
 void pacman_level_init(Pacman *pacman)
@@ -60,10 +65,15 @@ void pacman_location_init_player1(Pacman *pacman)
 	pacman->lastAttemptedMoveDirection = Left;
 }
 
-void pacman_location_init_player2(Pacman *pacman)
+void pacman_location_init_player2(Pacman *pacman, int pveMode)
 {
 	pacman->body = (PhysicsBody) {16, 23, -8, 0, Left, Left, 1, 0, 0};
+
 	pacman->body.velocity = 80;
+	if(pveMode){
+		pacman->body.velocity = 90;
+	}
+
 	pacman->movementType = Unstuck;
 	pacman->lastAttemptedMoveDirection = Right;
 }

@@ -102,6 +102,7 @@ void draw_eyes(Ghost *ghost);
 //
 
 void draw_fruit_pts(GameFruit *gameFruit);
+void draw_ghost_pts(Ghost *Ghost);
 
 //
 // Board rendering

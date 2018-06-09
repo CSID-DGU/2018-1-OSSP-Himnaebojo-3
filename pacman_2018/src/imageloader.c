@@ -918,13 +918,7 @@ SDL_Surface* get_fruit_score_image(Fruit fruit)
 	exit(1);
 }
 
-SDL_Surface* get_ghost_score_image(int i)
+SDL_Surface* get_ghost_score_image()
 {
-	if (i < 0 || i > 3)
-	{
-		printf("incorrect ghost score num: %d\nAborting\n", i);
-		exit(1);
-	}
-
-	return ghostPoints[i];
+	return ghostPoints[1];
 }

@@ -162,7 +162,7 @@ void game_tick(PacmanGame *game)
 					//draw_pacman_death(&game->pacman, 1500 - 1000);
 				}
 				else if (collidedWithGhost2){
-					pacman_location_init_player2(&game->pacman2);
+					pacman_location_init_player2(&game->pacman2, game->pveMode);
 					game->pacman2.livesLeft--;
 					bullet_effect_eliminate(&game->pacman2);
 					//unsigned dt;
@@ -261,6 +261,12 @@ void game_render(PacmanGame *game)
 			if (game->gameFruit3.eaten && ticks_game() - game->gameFruit3.eatenAt < 2000) draw_fruit_pts(&game->gameFruit3);
 			if (game->gameFruit4.eaten && ticks_game() - game->gameFruit4.eatenAt < 2000) draw_fruit_pts(&game->gameFruit4);
 			if (game->gameFruit5.eaten && ticks_game() - game->gameFruit5.eatenAt < 2000) draw_fruit_pts(&game->gameFruit5);
+
+			if (game->ghosts[0].isDead==1 && ticks_game() - game->ghosts[0].DeadAt < 500) draw_ghost_pts(&game->ghosts[0]);
+			if (game->ghosts[1].isDead==1 && ticks_game() - game->ghosts[1].DeadAt < 500) draw_ghost_pts(&game->ghosts[1]);
+			if (game->ghosts[2].isDead==1 && ticks_game() - game->ghosts[2].DeadAt < 500) draw_ghost_pts(&game->ghosts[2]);
+			if (game->ghosts[3].isDead==1 && ticks_game() - game->ghosts[3].DeadAt < 500) draw_ghost_pts(&game->ghosts[3]);
+
 
 			if(game->pacman.livesLeft>=0){
 				draw_pacman(&game->pacman);
@@ -708,8 +714,11 @@ static void process_ghosts(PacmanGame *game)
 		if (result == NewSquare)
 		{
 			//if they are in a new tile, rerun their target update logic
-			execute_ghost_logic(g, g->ghostType, &game->ghosts[0], &game->pacman);
-
+			if(!game->multiMode){
+				execute_ghost_logic(g, g->ghostType, &game->ghosts[0], &game->pacman);
+			}else{
+				execute_ghost_logic2(g, g->ghostType, &game->ghosts[0], &game->pacman, &game->pacman2);
+			}
 			g->nextDirection = next_direction(g, &game->board);
 		}
 		else if (result == OverCenter)
@@ -1029,6 +1038,9 @@ static void process_pellets(PacmanGame *game)
 			{
 				game->pacman.godMode = true;
 				game->pacman.originDt = ticks_game();
+
+				game->pacman2.godMode = true;
+				game->pacman2.originDt = ticks_game();
 				for(j = 0; j< 4; j++)
 				{
 					if(game->ghosts[j].isDead == 2)
@@ -1073,6 +1085,9 @@ static void process_pellets2(PacmanGame *game)
 			if(pellet_check(p)) {
 				game->pacman2.godMode = true;
 				game->pacman2.originDt = ticks_game();
+
+				game->pacman.godMode = true;
+				game->pacman.originDt = ticks_game();
 				for(j = 0; j< 4; j++) {
 					if(game->ghosts[j].isDead == 2)
 						game->ghosts[j].isDead = 0;
@@ -1101,6 +1116,12 @@ static bool check_pacghost_collision(PacmanGame *game, Pacman *pacman)
 			else {
 				if(g->isDead == 2) {return true;}
 				g->isDead = 1;
+
+				g->deathPoint_x = g->body.x;
+				g->deathPoint_y = g->body.y;
+
+				g->DeadAt = ticks_game();
+				pacman->score += 400;
 				death_send(g);
 			}
 		}
@@ -1116,7 +1137,7 @@ void gamestart_init(PacmanGame *game)
 	if(!game->multiMode)
 		pacman_init(&game->pacman);
 	else
-		pacman_init_multiMode(&game->pacman, &game->pacman2);
+		pacman_init_multiMode(&game->pacman, &game->pacman2, game->pveMode);
 	//we need to reset all fruit
 	//fuit_init();
 	game->highscore = 0; //TODO maybe load this in from a file..?
@@ -1294,7 +1315,7 @@ void PROCESS_AI(PacmanGame *game){
 		}
 
 		int ghost_pac_distance = 10000;
-		int Ghost_min_distance = 25;
+		int Ghost_min_distance = 16;//25
 		for (int i = 0; i < 4; i++) {
 			Ghost *g = &game->ghosts[i];
 			int tempdistance_with_ghost = (g->body.x - pacman->body.x)
@@ -1309,31 +1330,38 @@ void PROCESS_AI(PacmanGame *game){
 
 		if (ghost_pac_distance <= Ghost_min_distance)
 		{
-			 if (pacman->godMode && (NearGhost->isDead != 1))
+			 if (pacman->godMode && (NearGhost->isDead != 1) && (NearGhost->isDead != 2)) //(pacman->godMode && (NearGhost->isDead != 1))
 			 {
 			 	newDir = next_direction_pac(pacman, board, NearGhost->body.x, NearGhost->body.y);
-			 	printf("chase\n");
+			 	//printf("chase\n");
 			 }
 			 else
 			 {
 				newDir = next_direction_pac2(pacman, board, NearGhost->body.x, NearGhost->body.y);
-				printf("run away\n");
+				//printf("run away\n");
 			 }
 		}
 		else {
 			int minDistance = 10000;
+
 			for (int i = 0; i < holder->totalNum; i++) {
 				Pellet *p = &holder->pellets[i];
 				int tempdistance = ((pacman->body.x) - (p->x))
 						* ((pacman->body.x) - (p->x))
 						+ ((pacman->body.y) - (p->y)) * ((pacman->body.y) - (p->y));
-				if (!p->eaten && minDistance > tempdistance) {
+
+				if (!p->eaten && (minDistance > tempdistance)) {
 					minDistance = tempdistance;
 					target_x = p->x;
 					target_y = p->y;
+
 				}
 			}
-			search_fruit(game, &target_x, &target_y); //priority fruit >  pellet
+			//printf("near pellet : %d %d\n", target_x, target_y);
+
+			//search_bigPellet(game, &target_x, &target_y); //priority big pellet > small pellet
+			search_fruit(game, &target_x, &target_y); //priority fruit > big pellet
+
 			//printf("target_x : %d, target_y : %d", target_x, target_y);
 
 			newDir = next_direction_pac(pacman, board, target_x, target_y);
@@ -1394,6 +1422,31 @@ void PROCESS_AI(PacmanGame *game){
 		}
 
 		resolve_telesquare(&pacman->body);
+}
+
+void search_bigPellet(PacmanGame *game, int *target_x, int *target_y ){
+	Pacman *pacman = &game->pacman2;
+	PelletHolder *holder = &game->pelletHolder;
+
+	int minDistance = 10000;
+
+	for (int i = 0; i < holder->totalNum; i++)
+	{
+		Pellet *p = &holder->pellets[i];
+
+		if(pellet_check(p)){
+			int tempdistance = ((pacman->body.x) - (p->x))
+					* ((pacman->body.x) - (p->x))
+					+ ((pacman->body.y) - (p->y)) * ((pacman->body.y) - (p->y));
+
+			if (!p->eaten && (minDistance > tempdistance)) {
+				minDistance = tempdistance;
+				*target_x = p->x;
+				*target_y = p->y;
+			}
+		}
+	}
+	printf("near big pellet : %d %d\n", *target_x, *target_y);
 }
 
 void search_fruit(PacmanGame *game, int *target_x, int *target_y ){

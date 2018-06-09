@@ -64,5 +64,6 @@ SDL_Surface* get_fruit_image(Fruit fruit);
 SDL_Surface* get_item_image(Item item);
 SDL_Surface* get_bullet_image(void);
 
-SDL_Surface* get_ghost_score_image(int i);
+SDL_Surface* get_ghost_score_image();
+//SDL_Surface* get_ghost_score_image(int i);
 SDL_Surface* get_fruit_score_image(Fruit fruit);
