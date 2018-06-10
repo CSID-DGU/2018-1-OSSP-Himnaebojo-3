@@ -87,12 +87,14 @@ static void internal_tick(void)
 //playmode별 실행 분기
 			if (menuSystem.action == GoToGame && mode==Single)
 			{
+				numCredits--;
 				pacmanGame.multiMode=0;
 				state = Game;
 				startgame_init();
 			}
 			else if (menuSystem.action == GoToGame && mode==Pvp)
 			{
+				numCredits--;
 				pacmanGame.multiMode=1;
 				pacmanGame.pveMode=0;
 				state = Game;
@@ -100,6 +102,7 @@ static void internal_tick(void)
 			}
 			else if (menuSystem.action == GoToGame && mode==Pve)
 			{
+				numCredits--;
 				pacmanGame.multiMode=1;
 				pacmanGame.pveMode=1;
 				state = Game;
