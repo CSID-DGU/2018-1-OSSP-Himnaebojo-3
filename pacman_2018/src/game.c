@@ -152,7 +152,7 @@ void game_render(PacmanGame *game)
 	{
 		case GameBeginState:
 			if(game->multiMode==0){ //싱글 모드 렌더링 호출
-			draw_game_playerone_start();
+			draw_game_singlemode_start();
 			}
 			else if(game->pveMode==0){ //PVP 모드 렌더링 호출
 			draw_game_pvpmode_start();
