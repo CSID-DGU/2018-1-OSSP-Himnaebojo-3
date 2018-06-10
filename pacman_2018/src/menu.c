@@ -6,7 +6,7 @@
 
 #include "input.h"
 #include "ghost.h"
-#include "main.h"
+//#include "main.h"
 #include "renderer.h"
 
 //time till ghost-rows start appearing
@@ -16,7 +16,7 @@
 #define GHOST_BETWEEN 2000
 
 static void draw_vanity_screen(MenuSystem *menuSystem);
-static void draw_info_screen(void);
+static void draw_info_screen(ModeState *mode);
 
 static void draw_ghost_line(GhostDisplayRow *row, int y, unsigned int dt);
 static void draw_player_info(void);
@@ -38,16 +38,16 @@ void menu_tick(MenuSystem *menuSystem)
 {
 	bool startNew = key_held(SDLK_KP_ENTER) || key_held(SDLK_RETURN);
 
-	if (startNew)
+	if (startNew && num_credits() != 0) //코인이 0일 때 게임이 시작되는 것을 방지
 	{
 		menuSystem->action = GoToGame;
 	}
 }
 
-void menu_render(MenuSystem *menuSystem)
+void menu_render(MenuSystem *menuSystem, ModeState *mode) //현재 모드 상태값의 포인터 넘기기
 {
 	if (num_credits() == 0) draw_vanity_screen(menuSystem);
-	else draw_info_screen();
+	else draw_info_screen(mode);
 }
 
 static void draw_vanity_screen(MenuSystem *menuSystem)
@@ -71,9 +71,10 @@ static void draw_vanity_screen(MenuSystem *menuSystem)
 	if (dt > 11500) draw_vanity_animation(dt - 11500);
 }
 
-static void draw_info_screen(void)
+static void draw_info_screen(ModeState *mode) //현재 모드 상태값의 포인터 넘기기
 {
 	draw_player_info();
+	draw_select_playmode(mode);
 	draw_instrc_info();
 	draw_instrc_corporate_info();
 }

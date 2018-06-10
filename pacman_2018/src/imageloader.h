@@ -36,6 +36,7 @@ SDL_Surface* large_pellet_image(void);
 
 SDL_Surface* pts_white_image(void);
 SDL_Surface* pts_peach_image(void);
+SDL_Surface* modearrow_image(void);
 
 SDL_Surface* pacman_image(void);
 SDL_Surface* pacman_image2(void);

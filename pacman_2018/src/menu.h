@@ -1,5 +1,5 @@
 #pragma once
-
+#include "main.h"
 //Defines what action we should take at a particular time while on the menu.
 typedef enum
 {
@@ -18,6 +18,6 @@ typedef struct
 void menu_tick(MenuSystem *menuSystem);
 
 //Renders the menu system in its current state.
-void menu_render(MenuSystem *menuSystem);
+void menu_render(MenuSystem *menuSystem, ModeState *mode);
 
 void menu_init(MenuSystem *menuSystem);

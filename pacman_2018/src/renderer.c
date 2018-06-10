@@ -95,14 +95,27 @@ void draw_vanity_animation(int dt)
 //
 //
 
+void draw_select_playmode(ModeState *mode)
+{
+	set_text_color(WhiteText);
+//현재 모드에 맞춰서 화살표 그리기
+	if(*mode==Single) draw_image_coord(modearrow_image(), 7, 8);
+	else if(*mode==Pvp) draw_image_coord(modearrow_image(), 7, 10);
+	else if(*mode==Pve) draw_image_coord(modearrow_image(), 7, 12);
+
+	draw_text_coord(get_screen(), "SINGLE MODE", 9, 8);
+	draw_text_coord(get_screen(), "PVP MODE", 9, 10);
+	draw_text_coord(get_screen(), "PVE MODE", 9, 12);
+}
+
 void draw_instrc_info(void)
 {
 	set_text_color(OrangeText);
-	draw_text_coord(get_screen(), "PUSH START BUTTON", 6, 16);
+	draw_text_coord(get_screen(), "PUSH ENTER BUTTON", 6, 20);
 
-	set_text_color(CyanText);
-	draw_text_coord(get_screen(), "  PLAYER ONLY", 8, 20);
-	draw_numtext_coord(get_screen(), "1", 8, 20);
+	//set_text_color(CyanText);
+	//draw_text_coord(get_screen(), "  PLAYER ONLY", 8, 20);
+	//draw_numtext_coord(get_screen(), "1", 8, 20);
 
 	set_text_color(PeachText);
 	draw_text_coord(get_screen(), "BONUS PAC-MAN FOR", 1, 24);
@@ -184,15 +197,25 @@ void draw_credits(int numCredits)
 // Game-only word rendering
 //
 
-void draw_game_playerone_start(void)
+void draw_game_singlemode_start(void) //싱글 모드 실행 시 렌더링
 {
 	set_text_color(CyanText);
-	draw_text_coord(get_screen(), "PLAYER ONE", 9, 14);
+	draw_text_coord(get_screen(), "SINGLE", 11, 14);
+	draw_text_coord(get_screen(), "MODE", 12, 17);
 }
 
-void draw_game_playertwo_start(void)
+void draw_game_pvpmode_start(void) //PVP 모드 실행 시 렌더링
 {
+	set_text_color(CyanText);
+	draw_text_coord(get_screen(), "PVP", 12, 14);
+	draw_text_coord(get_screen(), "MODE", 12, 17);
+}
 
+void draw_game_pvemode_start(void) //PVE 모드 실행 시 렌더링
+{
+	set_text_color(CyanText);
+	draw_text_coord(get_screen(), "PVE", 12, 14);
+	draw_text_coord(get_screen(), "MODE", 12, 17);
 }
 
 void draw_game_ready(void)

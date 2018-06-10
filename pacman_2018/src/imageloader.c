@@ -69,7 +69,7 @@ SDL_Surface *ptsPeachImage;
 
 SDL_Surface *fruitPoints[NUM_FRUIT];
 SDL_Surface *ghostPoints[4];
-
+SDL_Surface *modearrow; //모드 선택 화살표
 //
 //pacman sprites
 //
@@ -470,6 +470,8 @@ void load_misc_images(void)
 	ptsWhiteImage = load_image(DIR "ptswhite.png");
 	ptsPeachImage = load_image(DIR "ptspeach.png");
 
+	modearrow = load_image(DIR "modearrow.png"); //모드 선택 화살표 로드
+
 	char dirStr[256];
 
 	const char *fruitPntStr[] = {"100", "300", "500", "700", "1000", "2000", "3000", "5000"};
@@ -495,6 +497,8 @@ void dispose_misc_images(void)
 
 	SDL_FreeSurface(ptsWhiteImage);
 	SDL_FreeSurface(ptsPeachImage);
+
+	SDL_FreeSurface(modearrow); //모드 선택 화살표 dispose
 
 	for (int i = 0; i < NUM_FRUIT; i++)
 	{
@@ -695,6 +699,11 @@ SDL_Surface* pts_white_image(void)
 SDL_Surface* pts_peach_image(void)
 {
 	return ptsPeachImage;
+}
+
+SDL_Surface* modearrow_image(void) //모드 선택 화살표를 반환
+{
+	return modearrow;
 }
 
 SDL_Surface* pacman_image(void)
