@@ -93,12 +93,14 @@ static void internal_tick(void)
 			else if (menuSystem.action == GoToGame && mode==Pvp)
 			{
 				pacmanGame.multiMode=1;
+				pacmanGame.pveMode=0;
 				state = Game;
 				startgame_init();
 			}
 			else if (menuSystem.action == GoToGame && mode==Pve)
 			{
-				pacmanGame.multiMode=1; //Pve 모드는 일단 Pvp가 실행되게 설정
+				pacmanGame.multiMode=1;
+				pacmanGame.pveMode=1;
 				state = Game;
 				startgame_init();
 			}

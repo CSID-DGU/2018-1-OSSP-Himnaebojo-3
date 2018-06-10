@@ -151,7 +151,16 @@ void game_render(PacmanGame *game)
 	switch (game->gameState)
 	{
 		case GameBeginState:
+			if(game->multiMode==0){ //싱글 모드 렌더링 호출
 			draw_game_playerone_start();
+			}
+			else if(game->pveMode==0){ //PVP 모드 렌더링 호출
+			draw_game_pvpmode_start();
+			}
+			else{ //PVE 모드 렌더링 호출
+			draw_game_pvemode_start();
+			}
+
 			draw_game_ready();
 
 			draw_large_pellets(&game->pelletHolder, false);
