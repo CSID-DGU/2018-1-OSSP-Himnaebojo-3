@@ -162,8 +162,11 @@ void game_tick(PacmanGame *game)
 					//draw_pacman_death(&game->pacman, 1500 - 1000);
 				}
 				else if (collidedWithGhost2){
-					play_sound(DeathSound);
-					pacman_location_init_player2(&game->pacman2, game->pveMode);
+
+					if(game->pacman2.livesLeft>0){
+						play_sound(DeathSound);
+						pacman_location_init_player2(&game->pacman2, game->pveMode);
+					}
 					game->pacman2.livesLeft--;
 					bullet_effect_eliminate(&game->pacman2);
 					//unsigned dt;
@@ -308,9 +311,8 @@ void game_render(PacmanGame *game)
 					} else
 						draw_ghost(&game->ghosts[i]);
 				}
-
 			}
-			else if(game->pacman.godMode == true)
+			else if(game->pacman.godMode == true || game->pacman2.godMode == true)
 			{
 				if(godChange == false)
 				{
@@ -335,13 +337,14 @@ void game_render(PacmanGame *game)
 					else
 					{
 						game->pacman.godMode = false;
+						game->pacman2.godMode = false;
 						godChange = false;
 						if(game->ghosts[i].isDead == 2)
 							game->ghosts[i].isDead = 0;
 					}
 				}
 			}
-			else
+			/*else
 			{
 				if(godChange == false)
 				{
@@ -371,7 +374,7 @@ void game_render(PacmanGame *game)
 							game->ghosts[i].isDead = 0;
 					}
 				}
-			}
+			}*/
 
 			break;
 		case WinState:
@@ -1037,16 +1040,19 @@ static void process_pellets(PacmanGame *game)
 			if(pellet_check(p))
 			{
 
-				if(game->pacman.livesLeft > 0)
+				if(game->pacman.livesLeft >= 0){
 					game->pacman.godMode = true;
-				if(game->pacman2.livesLeft > 0)
+					printf("1pacman godmode\n");
+				}
+				if(game->pacman2.livesLeft >= 0){
 					game->pacman2.godMode = true;
-
+					printf("2pacman godmode\n");
+				}
 				play_sound(GodModeSound);
 
-				if(game->pacman.livesLeft > 0)
+				if(game->pacman.livesLeft >= 0)
 					game->pacman.originDt = ticks_game();
-				if(game->pacman2.livesLeft > 0)
+				if(game->pacman2.livesLeft >= 0)
 					game->pacman2.originDt = ticks_game();
 
 				for(j = 0; j< 4; j++)
@@ -1096,16 +1102,20 @@ static void process_pellets2(PacmanGame *game)
 			game->pacman2.score += pellet_points(p);
 			if(pellet_check(p)) {
 
-				if(game->pacman.livesLeft > 0)
+				if(game->pacman.livesLeft >= 0){
 					game->pacman.godMode = true;
-				if(game->pacman2.livesLeft > 0)
+					printf("1pacman godmode\n");
+				}
+				if(game->pacman2.livesLeft >= 0){
 					game->pacman2.godMode = true;
+					printf("2pacman godmode\n");
+				}
 
 				play_sound(GodModeSound);
 
-				if(game->pacman.livesLeft > 0)
+				if(game->pacman.livesLeft >= 0)
 					game->pacman.originDt = ticks_game();
-				if(game->pacman2.livesLeft > 0)
+				if(game->pacman2.livesLeft >= 0)
 					game->pacman2.originDt = ticks_game();
 
 				for(j = 0; j< 4; j++) {
@@ -1356,12 +1366,10 @@ void PROCESS_AI(PacmanGame *game){
 			 if (pacman->godMode && (NearGhost->isDead != 1) && (NearGhost->isDead != 2)) //(pacman->godMode && (NearGhost->isDead != 1))
 			 {
 			 	newDir = next_direction_pac(pacman, board, NearGhost->body.x, NearGhost->body.y);
-			 	//printf("chase\n");
 			 }
 			 else
 			 {
 				newDir = next_direction_pac2(pacman, board, NearGhost->body.x, NearGhost->body.y);
-				//printf("run away\n");
 			 }
 		}
 		else {
@@ -1385,7 +1393,6 @@ void PROCESS_AI(PacmanGame *game){
 			//search_bigPellet(game, &target_x, &target_y); //priority big pellet > small pellet
 			search_fruit(game, &target_x, &target_y); //priority fruit > big pellet
 
-			//printf("target_x : %d, target_y : %d", target_x, target_y);
 
 			newDir = next_direction_pac(pacman, board, target_x, target_y);
 		}
@@ -1469,7 +1476,6 @@ void search_bigPellet(PacmanGame *game, int *target_x, int *target_y ){
 			}
 		}
 	}
-	printf("near big pellet : %d %d\n", *target_x, *target_y);
 }
 
 void search_fruit(PacmanGame *game, int *target_x, int *target_y ){
