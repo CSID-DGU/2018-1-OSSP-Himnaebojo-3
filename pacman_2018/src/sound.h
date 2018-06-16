@@ -9,8 +9,16 @@
 typedef enum
 {
 	LevelStartSound,
-	WakawakaSound,
-	PacmanDeathSound
+	BulletSound,
+	BulletItemSound,
+	DeathSound,
+	EatingFruitSound,
+	EatingPelletSound,
+	GodModeSound,
+	PacGhostSound,
+	LoseSound,
+	SpeedDownSound,
+	WinSound
 } SoundEffect;
 
 //Initializes and loads all sounds. Must be called before playing any sounds.

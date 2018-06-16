@@ -13,7 +13,28 @@ static Mix_Music *music;
 //static Mix_Chunk *effects[NUM_EFFECTS];
 
 static Mix_Chunk *levelStart;
+static Mix_Chunk *bullet;
+static Mix_Chunk *bulletItem;
+static Mix_Chunk *death;
+static Mix_Chunk *eatingFruit;
+static Mix_Chunk *eatingPellet;
+static Mix_Chunk *GodMode;
+static Mix_Chunk *PacGhost;
+static Mix_Chunk *lose;
+static Mix_Chunk *speedDown;
+static Mix_Chunk *win;
+
 static int levelStartChanel;
+static int bulletChanel;
+static int bulletItemChanel;
+static int deathChanel;
+static int eatingFruitChanel;
+static int eatingPelletChanel;
+static int GodModeChanel;
+static int PacGhostChanel;
+static int loseChanel;
+static int speedDownChanel;
+static int winChanel;
 
 void load_sounds(void)
 {
@@ -36,7 +57,18 @@ void load_sounds(void)
 		//effects[i] = Mix_LoadWAV(EFFECT_FILES[i]);
 	//}
 
-	levelStart = Mix_LoadWAV("sound/pacintro.wav");
+	levelStart = Mix_LoadWAV("sound/Level_Start.wav");
+	bullet=Mix_LoadWAV("sound/Bullet.wav");
+	bulletItem=Mix_LoadWAV("sound/BulletItem.wav");
+	death=Mix_LoadWAV("sound/Death.wav");
+	eatingFruit=Mix_LoadWAV("sound/Eating_Fruit.wav");
+	eatingPellet=Mix_LoadWAV("sound/Eating_Pellet.wav");
+	GodMode=Mix_LoadWAV("sound/God_Mode.wav");
+	PacGhost=Mix_LoadWAV("sound/PacGhost.wav");
+	lose=Mix_LoadWAV("sound/Lose.wav");
+	speedDown=Mix_LoadWAV("sound/SpeedDown.wav");
+	win=Mix_LoadWAV("sound/Win.wav");
+
 
 	set_sound_volume(0.5);
 	set_sound_muted(false);
@@ -91,9 +123,50 @@ void play_sound(SoundEffect effectName)
 
 	switch (effectName)
 	{
-		case LevelStartSound:  chunk = levelStart; channel = &levelStartChanel; break;
-		case WakawakaSound:    chunk = levelStart; channel = &levelStartChanel; break;
-		case PacmanDeathSound: chunk = levelStart; channel = &levelStartChanel; break;
+		case LevelStartSound://level Start 시
+			chunk = levelStart;
+			channel = &levelStartChanel;
+			break;
+		case BulletSound://총알 발사 시
+			chunk=bullet;
+			channel=&bulletChanel;
+			break;
+		case BulletItemSound://총알 아이템 먹었을 시
+			chunk=bulletItem;
+			channel=&bulletItemChanel;
+			break;
+		case DeathSound://DeathState로 들어갈 시
+			chunk=death;
+			channel=&deathChanel;
+			break;
+		case EatingFruitSound://Fruit 먹었을 시
+			chunk=eatingFruit;
+			channel=&eatingFruitChanel;
+			break;
+		case EatingPelletSound://Pellet 먹었을 시
+			chunk=eatingPellet;
+			channel=&eatingPelletChanel;
+			break;
+		case GodModeSound://BigPellet 먹었을 시
+			chunk=GodMode;
+			channel=&GodModeChanel;
+			break;
+		case PacGhostSound:
+			chunk=PacGhost;
+			channel=&PacGhostChanel;
+			break;
+		case LoseSound://GameOverState로 들어갈 시
+			chunk=lose;
+			channel=&loseChanel;
+			break;
+		case SpeedDownSound://속도저하 아이템 먹었을 시
+			chunk=speedDown;
+			channel=&speedDownChanel;
+			break;
+		case WinSound://WinState로 들어갈 시
+			chunk=win;
+			channel=&winChanel;
+			break;
 	}
 
 	*channel = Mix_PlayChannel(-1, chunk, 0);
@@ -111,8 +184,6 @@ void stop_sound(SoundEffect effectName)
 	switch (effectName)
 	{
 		case LevelStartSound:  channel = levelStartChanel; break;
-		case WakawakaSound:    channel = levelStartChanel; break;
-		case PacmanDeathSound: channel = levelStartChanel; break;
 		default: printf("badsound\naborting\n"); exit(1); //TODO: fix this up
 	}
 

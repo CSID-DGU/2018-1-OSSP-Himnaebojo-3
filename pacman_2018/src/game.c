@@ -32,6 +32,7 @@ static void process_pellets2(PacmanGame *game);
 static bool check_pacghost_collision(PacmanGame *game, Pacman *pacman); //return true if pacman collided with any ghosts   //return true if pacman collided with any ghosts
 =======
 
+
 static bool check_pacghost_collision(PacmanGame *game);     //return true if pacman collided with any ghosts
 >>>>>>> game_UserInterface
 static void enter_state(PacmanGame *game, GameState state); //transitions to/ from a state
@@ -82,6 +83,7 @@ void game_tick(PacmanGame *game)
 
 			process_fruit(game);
 			process_pellets(game);
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 			if(game->pacman.bulletOn==true&&game->bullet.bullet_displaying==true) process_bullet(game, &game->pacman, &game->bullet);
@@ -96,6 +98,15 @@ void game_tick(PacmanGame *game)
 				game->highscore = game->pacman2.score;
 			}
 =======
+=======
+
+			if(game->pacman.bulletOn==true&&game->bullet.bullet_displaying==true)
+			{
+				process_bullet(game);
+			}
+
+
+>>>>>>> game_Addsounds
 			if (game->pacman.score > game->highscore) game->highscore = game->pacman.score;
 >>>>>>> game_UserInterface
 
@@ -189,8 +200,16 @@ void game_tick(PacmanGame *game)
 			if (key_held(SDLK_k)) enter_state(game, DeathState);
 
 			else if (allPelletsEaten) enter_state(game, WinState);
+<<<<<<< HEAD
 			else if (collidedWithGhost) enter_state(game, DeathState);
 >>>>>>> game_UserInterface
+=======
+			else if (collidedWithGhost)
+			{
+				play_sound(DeathSound);
+				enter_state(game, DeathState);
+			}
+>>>>>>> game_Addsounds
 
 			break;
 		case WinState:
@@ -201,8 +220,14 @@ void game_tick(PacmanGame *game)
 		case DeathState:
 			if (dt > 4000)
 			{
-				if (lives == 0) enter_state(game, GameoverState);
-				else enter_state(game, LevelBeginState);
+				if (lives == 0)
+				{
+					enter_state(game, GameoverState);
+				}
+				else
+				{
+					enter_state(game, LevelBeginState);
+				}
 			}
 
 			break;
@@ -313,12 +338,21 @@ void game_render(PacmanGame *game)
 				}
 			}
 
+<<<<<<< HEAD
 			if(game->bullet.bullet_displaying==true)
 				draw_bullet(&game->bullet);
 			if(game->multiMode && game->bullet2.bullet_displaying==true)
 				draw_bullet(&game->bullet2);
 
 			if(game->pacman.godMode == false && game->pacman2.godMode == false)
+=======
+			draw_pacman(&game->pacman);
+
+			if(game->bullet.bullet_displaying==true)
+				draw_bullet(&game->bullet);
+
+			if(game->pacman.godMode == false)
+>>>>>>> game_Addsounds
 			{
 				for (int i = 0; i < 4; i++)
 				{
@@ -482,19 +516,21 @@ static void enter_state(PacmanGame *game, GameState state)
 	{
 		case GameBeginState:
 			play_sound(LevelStartSound);
-
 			break;
 		case LevelBeginState:
-			
+			if(game->currentLevel!=1)
+				play_sound(LevelStartSound);
 			break;
 		case GamePlayState:
+
 			break;
 		case WinState:
-
+			play_sound(WinSound);
 			break;
 		case DeathState:
 			break;
 		case GameoverState:
+			play_sound(LoseSound);
 			break;
 	}
 
@@ -767,6 +803,7 @@ static void process_fruit(PacmanGame *game)
 		f1->eaten = true;
 		f1->eatenAt = ticks_game();
 		pac->score += fruit_points(f1->fruit);
+		play_sound(EatingFruitSound);
 	}
 
 	if (f2->fruitMode == Displaying && collides_obj(&pac->body, f2->x, f2->y))
@@ -775,6 +812,8 @@ static void process_fruit(PacmanGame *game)
 		f2->eaten = true;
 		f2->eatenAt = ticks_game();
 		pac->score += fruit_points(f2->fruit);
+		play_sound(EatingFruitSound);
+
 	}
 	if (f3->fruitMode == Displaying && collides_obj(&pac->body, f3->x, f3->y))
 	{
@@ -782,6 +821,8 @@ static void process_fruit(PacmanGame *game)
 		f3->eaten = true;
 		f3->eatenAt = ticks_game();
 		pac->score += fruit_points(f3->fruit);
+		play_sound(EatingFruitSound);
+
 	}
 	if (f4->fruitMode == Displaying && collides_obj(&pac->body, f4->x, f4->y))
 	{
@@ -789,6 +830,8 @@ static void process_fruit(PacmanGame *game)
 		f4->eaten = true;
 		f4->eatenAt = ticks_game();
 		pac->score += fruit_points(f4->fruit);
+		play_sound(EatingFruitSound);
+
 	}
 	if (f5->fruitMode == Displaying && collides_obj(&pac->body, f5->x, f5->y))
 	{
@@ -796,6 +839,8 @@ static void process_fruit(PacmanGame *game)
 		f5->eaten = true;
 		f5->eatenAt = ticks_game();
 		pac->score += fruit_points(f5->fruit);
+		play_sound(EatingFruitSound);
+
 	}
 
 }
@@ -900,6 +945,7 @@ static void process_item(PacmanGame *game)
 
 		/*if (i==0&&item->itemMode == Displaying_I && collides_obj(&pac->body, item->x, item->y))
 		{
+			play_sound(BulletItemSound);
 			item->itemMode = Displayed_I;
 			item->eaten = true;
 			item->eatenAt = ticks_game();
@@ -907,7 +953,10 @@ static void process_item(PacmanGame *game)
 			game->pacman.bulletOn=true;
 			game->pacman.bulletsLeft=5;
 		}
+<<<<<<< HEAD
 
+=======
+>>>>>>> game_Addsounds
 		if(i==0&&game->pacman.bulletsLeft==0&&game->bullet.bullet_displaying==false)
 		{
 			game->pacman.bulletOn=false;
@@ -916,6 +965,7 @@ static void process_item(PacmanGame *game)
 		//LowVelocity
 		if (i==1&&item->itemMode == Displaying_I && collides_obj(&pac->body, item->x, item->y))
 		{
+			play_sound(SpeedDownSound);
 			item->itemMode = Displayed_I;
 			item->eaten = true;
 			item->eatenAt = ticks_game();
@@ -952,13 +1002,21 @@ static void process_pellets(PacmanGame *game)
 
 		if (collides_obj(&game->pacman.body, p->x, p->y))
 		{
+			if(!pellet_check(p))
+			{
+				play_sound(EatingPelletSound);
+			}
+
 			holder->numLeft--;
 
 			p->eaten = true;
 			game->pacman.score += pellet_points(p);
-			if(pellet_check(p)) {
+			if(pellet_check(p))
+			{
 				game->pacman.godMode = true;
+				play_sound(GodModeSound);
 				game->pacman.originDt = ticks_game();
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 				game->pacman2.godMode = true;
@@ -968,12 +1026,14 @@ static void process_pellets(PacmanGame *game)
 =======
 				for(j = 0; j< 4; j++) {
 >>>>>>> game_UserInterface
+=======
+				for(j = 0; j< 4; j++)
+				{
+>>>>>>> game_Addsounds
 					if(game->ghosts[j].isDead == 2)
 						game->ghosts[j].isDead = 0;
 				}
 			}
-
-			//play eat sound
 
 			//eating a small pellet makes pacman not move for 1 frame
 			//eating a large pellet makes pacman not move for 3 frames
@@ -1051,13 +1111,27 @@ static bool check_pacghost_collision(PacmanGame *game)
 		}
 		*/
 
-		if (collides(&game->pacman.body, &g->body)) {
+		if (collides(&game->pacman.body, &g->body))
+		{
+			if(g->isDead==1)
+				return false;
+
 			if(game->pacman.godMode == false)
+<<<<<<< HEAD
 >>>>>>> game_UserInterface
+=======
+			{
+>>>>>>> game_Addsounds
 				return true;
-			else {
-				if(g->isDead == 2) {return true;}
+			}
+			else
+			{
+				if(g->isDead == 2)
+				{
+					return true;
+				}
 				g->isDead = 1;
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 				g->deathPoint_x = g->body.x;
@@ -1067,8 +1141,12 @@ static bool check_pacghost_collision(PacmanGame *game)
 				pacman->score += 400;
 =======
 >>>>>>> game_UserInterface
+=======
+				play_sound(PacGhostSound);
+>>>>>>> game_Addsounds
 				death_send(g);
 			}
+
 		}
 	}
 
@@ -1189,20 +1267,35 @@ void process_bullet(PacmanGame *game,Pacman *pacman, Item_bullet *bullet)
 
 	for(int i=0;i<4;i++)
 	{
+<<<<<<< HEAD
 		if (bullet->bullet_displaying == true && collides(&game->ghosts[i].body, &bullet->body))
 		{
 			if(game->ghosts[i].isDead!=1)
 			{
 				bullet->bullet_displaying=false;
+=======
+		if (game->bullet.bullet_displaying == true && collides(&game->ghosts[i].body,&game->bullet.body))
+		{
+			if(game->ghosts[i].isDead!=1)
+			{
+				game->bullet.bullet_displaying=false;
+>>>>>>> game_Addsounds
 				game->ghosts[i].isDead = 1;
 			}
 		}
 	}
+<<<<<<< HEAD
 	if(!is_valid_square(&game->board, bullet->body.x, bullet->body.y))
 	{
 		bullet->bullet_displaying=false;
 	}
 
+=======
+	if(!is_valid_square(&game->board,game->bullet.body.x,game->bullet.body.y))
+	{
+		game->bullet.bullet_displaying=false;
+	}
+>>>>>>> game_Addsounds
 }
 
 void bullet_effect_eliminate(Pacman *pac){
@@ -1224,7 +1317,11 @@ int int_length2(int x)
 }
 void bullet_init(Item_bullet* bullet, Pacman* pac)
 {
+<<<<<<< HEAD
 	bullet->body = pac->body;
+=======
+	bullet->body =game->pacman.body;
+>>>>>>> game_Addsounds
 	bullet->body.velocity = 200;
 	bullet->bullet_displaying=true;
 }
