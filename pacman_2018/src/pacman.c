@@ -11,6 +11,7 @@ void pacman_init(Pacman *pacman)
 	pacman->missedFrames = 0;
 	pacman->godMode = false;
 	pacman->boostOn = false;
+<<<<<<< HEAD
 	pacman->bulletOn=false;
 }
 
@@ -36,6 +37,8 @@ void pacman_init_multiMode(Pacman *pacman1, Pacman *pacman2, int PveMode)
 		pacman2->body.velocity=90;
 	}
 
+=======
+>>>>>>> game_UserInterface
 }
 
 void pacman_level_init(Pacman *pacman)
@@ -51,6 +54,7 @@ void pacman_location_init(Pacman *pacman)
 	pacman->lastAttemptedMoveDirection = Left;
 }
 
+<<<<<<< HEAD
 void pacman_level_init_multimode(Pacman *pacman1, Pacman *pacman2)
 {
 	pacman_location_init_player1(pacman1);
@@ -86,6 +90,8 @@ void pacman_death(Pacman *pacman)
 	pacman->lastAttemptedMoveDirection = Right;
 }
 
+=======
+>>>>>>> game_UserInterface
 int pacman_speed_normal(int level)
 {
 	if (level == 1)  return 80;

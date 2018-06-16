@@ -10,7 +10,6 @@
 #include "fps.h"
 #include "game.h"
 #include "input.h"
-#include "item.h"
 #include "intermission.h"
 #include "imageloader.h"
 #include "menu.h"
@@ -46,6 +45,7 @@ static void process_events(void);
 static void key_down_hacks(int keycode);
 
 static ProgramState state;
+static ModeState mode;
 static MenuSystem menuSystem;
 static PacmanGame pacmanGame;
 
@@ -83,9 +83,24 @@ static void internal_tick(void)
 	{
 		case Menu:
 			menu_tick(&menuSystem);
-
-			if (menuSystem.action == GoToGame)
+//playmode별 실행 분기
+			if (menuSystem.action == GoToGame && mode==Single)
 			{
+				pacmanGame.multiMode=0;
+				state = Game;
+				startgame_init();
+			}
+			else if (menuSystem.action == GoToGame && mode==Pvp)
+			{
+				pacmanGame.multiMode=1;
+				pacmanGame.pveMode=0;
+				state = Game;
+				startgame_init();
+			}
+			else if (menuSystem.action == GoToGame && mode==Pve)
+			{
+				pacmanGame.multiMode=1;
+				pacmanGame.pveMode=1;
 				state = Game;
 				startgame_init();
 			}
@@ -114,7 +129,7 @@ static void internal_render(void)
 	switch (state)
 	{
 		case Menu:
-			menu_render(&menuSystem);
+			menu_render(&menuSystem, &mode);
 			break;
 		case Game:
 			game_render(&pacmanGame);
@@ -134,6 +149,9 @@ static void game_init(void)
 
 	//set to be in menu
 	state = Menu;
+
+	//최초 실행 시 Single 모드로 설정
+	mode = Single;
 
 	//init the framerate manager
 	fps_init(60);
@@ -201,22 +219,19 @@ static void key_down_hacks(int keycode)
 	static bool rateSwitch = false;
 
 	//TODO: remove this hack and try make it work with the physics body
-	if (keycode == SDLK_SPACE) fps_sethz((rateSwitch!=rateSwitch) ? 200 : 60);
+	if (keycode == SDLK_SPACE) fps_sethz((rateSwitch = !rateSwitch) ? 200 : 60);
 
-	if (keycode == SDLK_b)
-	{
-		if(!pacmanGame.pacman.boostOn)
-		{
+	if (keycode == SDLK_b) {
+		if(!pacmanGame.pacman.boostOn) {
 			pacmanGame.pacman.body.velocity = 100;
 			pacmanGame.pacman.boostOn = true;
-		}
-		else
-		{
+		} else {
 			pacmanGame.pacman.body.velocity = 80;
 			pacmanGame.pacman.boostOn = false;
 		}
 	}
 
+<<<<<<< HEAD
 	if(pacmanGame.pacman.bulletOn==true&&pacmanGame.bullet.bullet_displaying==false&&keycode==SDLK_SLASH)//bullet모드일 경우 '/' 누르면 총알 발사
 	{
 		pacmanGame.pacman.bulletsLeft--;
@@ -229,11 +244,14 @@ static void key_down_hacks(int keycode)
 		bullet_init(&pacmanGame.bullet2, &pacmanGame.pacman2);
 	}
 
+=======
+>>>>>>> game_UserInterface
 	//TODO: move logic into the tick method of the menu
 	if (state == Menu && keycode == SDLK_5 && numCredits < 99)
 	{
 		numCredits++;
 	}
+<<<<<<< HEAD
 
 	if (state == Menu && keycode == SDLK_1)
 	{
@@ -254,6 +272,17 @@ static void key_down_hacks(int keycode)
 		pacmanGame.multiMode=1;
 		pacmanGame.pveMode=1;
 		printf("PVE Mode\n");
+=======
+    //키보드 입력에 따라 플레이 모드 바꾸기
+	if (state == Menu && numCredits!=0 && keycode == SDLK_DOWN && mode<2)
+	{
+		mode++;
+	}
+
+	if (state == Menu && numCredits!=0 && keycode == SDLK_UP && mode>0)
+	{
+		mode--;
+>>>>>>> game_UserInterface
 	}
 
 	if (keycode == SDLK_9)

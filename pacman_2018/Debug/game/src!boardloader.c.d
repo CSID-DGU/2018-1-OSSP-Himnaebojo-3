@@ -6,5 +6,5 @@ Debug/game/src!boardloader.c.o: src/boardloader.c src/boardloader.h \
  SDL/SDL_active.h SDL/SDL_keyboard.h SDL/SDL_keysym.h SDL/SDL_mouse.h \
  SDL/SDL_video.h SDL/SDL_joystick.h SDL/SDL_quit.h SDL/SDL_loadso.h \
  SDL/SDL_timer.h SDL/SDL_version.h SDL/SDL_image.h SDL/SDL.h src/pellet.h \
- src/imageloader.h src/direction.h src/main.h src/item.h src/physics.h \
- src/fruit.h src/ghost.h src/pacman.h
+ src/imageloader.h src/direction.h src/main.h src/fruit.h src/ghost.h \
+ src/pacman.h src/physics.h

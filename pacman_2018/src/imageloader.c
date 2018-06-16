@@ -13,7 +13,6 @@
 #define PEN_DIR "pen/"
 
 #define FRUIT_DIR "fruit/"
-#define ITEM_DIR "item/"
 
 #define ENTITIES_DIR "entities/"
 
@@ -70,17 +69,21 @@ SDL_Surface *ptsPeachImage;
 SDL_Surface *fruitPoints[NUM_FRUIT];
 SDL_Surface *ghostPoints[4];
 
+SDL_Surface *modearrow; //모드 선택 화살표
+
 //
 //pacman sprites
 //
 SDL_Surface *pacman;
 SDL_Surface *pacman2;
+<<<<<<< HEAD
 SDL_Surface *pacman3;
 SDL_Surface *pacman2player_static;
+=======
+>>>>>>> game_UserInterface
 SDL_Surface *aniPacman[4][3];
 SDL_Surface *aniPacman2[4][3];
 SDL_Surface *aniPacmanBoost[4][3];
-SDL_Surface *aniPacmanBullet[4][3];
 SDL_Surface *deathPacman[11];
 SDL_Surface *pacmanLifeIcon;
 SDL_Surface *pacmanLifeIcon2;
@@ -115,10 +118,6 @@ SDL_Surface *galaxianImage;
 SDL_Surface *bellImage;
 SDL_Surface *keyImage;
 
-//item images
-SDL_Surface *bulletImage;//총알아이템 이미지
-SDL_Surface *lowvelocityImage;
-SDL_Surface *item_bullet;//총알이미지
 
 void load_board_images(void);
 void load_pacman_images(void);
@@ -126,7 +125,6 @@ void load_ghost_images(void);
 void load_misc_images(void);
 void load_char_images(void);
 void load_fruit_images(void);
-void load_item_images(void);
 
 void dispose_board_images(void);
 void dispose_pacman_images(void);
@@ -134,7 +132,6 @@ void dispose_ghost_images(void);
 void dispose_misc_images(void);
 void dispose_char_images(void);
 void dispose_fruit_images(void);
-void dispose_item_images(void);
 
 void load_images(void)
 {
@@ -144,7 +141,6 @@ void load_images(void)
 	load_misc_images();
 	load_char_images();
 	load_fruit_images();
-	load_item_images();
 }
 
 void dispose_images(void)
@@ -154,7 +150,6 @@ void dispose_images(void)
 	dispose_misc_images();
 	dispose_char_images();
 	dispose_fruit_images();
-	dispose_item_images();
 }
 
 void load_diags(SDL_Surface *images[4], const char *file)
@@ -215,8 +210,11 @@ void load_pacman_images(void)
 {
 	pacman = load_image(DIR ENTITIES_DIR PAC_DIR "pacman.png");
 	pacman2 = load_image(DIR ENTITIES_DIR PAC_DIR "pacman2.png");
+<<<<<<< HEAD
 	pacman3 = load_image(DIR ENTITIES_DIR PAC_DIR "pacman3.png");
 	pacman2player_static = load_image(DIR ENTITIES_DIR PAC_DIR "pacman4.png");
+=======
+>>>>>>> game_UserInterface
 
 	pacmanLifeIcon = load_image(DIR ENTITIES_DIR PAC_DIR "pac_life_icon.png");
 	pacmanLifeIcon2 = load_image(DIR ENTITIES_DIR PAC_DIR "pac_life_icon2.png");
@@ -271,23 +269,6 @@ void load_pacman_images(void)
 	aniPacmanBoost[3][1] = load_image(DIR ENTITIES_DIR PAC_DIR "d12.png");
 	aniPacmanBoost[3][2] = aniPacmanBoost[3][0];
 
-	//Bullet
-	aniPacmanBullet[0][0] = load_image(DIR ENTITIES_DIR PAC_DIR "l03.png");
-	aniPacmanBullet[0][1] = load_image(DIR ENTITIES_DIR PAC_DIR "l13.png");
-	aniPacmanBullet[0][2] = aniPacmanBullet[0][0];
-
-	aniPacmanBullet[1][0] = load_image(DIR ENTITIES_DIR PAC_DIR "u03.png");
-	aniPacmanBullet[1][1] = load_image(DIR ENTITIES_DIR PAC_DIR "u13.png");
-	aniPacmanBullet[1][2] = aniPacmanBullet[1][0];
-
-	aniPacmanBullet[2][0] = load_image(DIR ENTITIES_DIR PAC_DIR "r03.png");
-	aniPacmanBullet[2][1] = load_image(DIR ENTITIES_DIR PAC_DIR "r13.png");
-	aniPacmanBullet[2][2] = aniPacmanBullet[2][0];
-
-	aniPacmanBullet[3][0] = load_image(DIR ENTITIES_DIR PAC_DIR "d03.png");
-	aniPacmanBullet[3][1] = load_image(DIR ENTITIES_DIR PAC_DIR "d13.png");
-	aniPacmanBullet[3][2] = aniPacmanBullet[3][0];
-
 
 	char dirStr[256];
 
@@ -303,7 +284,6 @@ void dispose_pacman_images(void)
 {
 	SDL_FreeSurface(pacman);
 	SDL_FreeSurface(pacman2);
-	SDL_FreeSurface(pacman3);
 
 	SDL_FreeSurface(pacmanLifeIcon);
 
@@ -333,27 +313,11 @@ void dispose_pacman_images(void)
 	SDL_FreeSurface(aniPacmanBoost[3][0]);
 	SDL_FreeSurface(aniPacmanBoost[3][1]);
 
-	//Bullet
-
-	SDL_FreeSurface(aniPacmanBullet[0][0]);
-	SDL_FreeSurface(aniPacmanBullet[0][1]);
-
-	SDL_FreeSurface(aniPacmanBullet[1][0]);
-	SDL_FreeSurface(aniPacmanBullet[1][1]);
-
-	SDL_FreeSurface(aniPacmanBullet[2][0]);
-	SDL_FreeSurface(aniPacmanBullet[2][1]);
-
-	SDL_FreeSurface(aniPacmanBullet[3][0]);
-	SDL_FreeSurface(aniPacmanBullet[3][1]);
-
 	for (int i = 0; i < 11; i++)
 	{
 		SDL_FreeSurface(deathPacman[i]);
 	}
 }
-
-
 
 const char *red_dir = DIR ENTITIES_DIR GHOST_DIR RED_DIR;
 const char *pink_dir = DIR ENTITIES_DIR GHOST_DIR PINK_DIR;
@@ -448,20 +412,6 @@ void dispose_fruit_images(void)
 	SDL_FreeSurface(keyImage);
 }
 
-void load_item_images(void)
-{
-	bulletImage=load_image(DIR ITEM_DIR "Bullet.png");
-	lowvelocityImage=load_image(DIR ITEM_DIR "LowVelocity.png");
-	item_bullet=load_image(DIR "item_bullet.png");
-}
-
-void dispose_item_images(void)
-{
-	SDL_FreeSurface(bulletImage);
-	SDL_FreeSurface(lowvelocityImage);
-	SDL_FreeSurface(item_bullet);
-}
-
 void load_misc_images(void)
 {
 	smallPellet = load_image(DIR "smallpellet.png");
@@ -469,6 +419,8 @@ void load_misc_images(void)
 
 	ptsWhiteImage = load_image(DIR "ptswhite.png");
 	ptsPeachImage = load_image(DIR "ptspeach.png");
+
+	modearrow = load_image(DIR "modearrow.png"); //모드 선택 화살표 로드
 
 	char dirStr[256];
 
@@ -495,6 +447,8 @@ void dispose_misc_images(void)
 
 	SDL_FreeSurface(ptsWhiteImage);
 	SDL_FreeSurface(ptsPeachImage);
+
+	SDL_FreeSurface(modearrow); //모드 선택 화살표 dispose
 
 	for (int i = 0; i < NUM_FRUIT; i++)
 	{
@@ -697,17 +651,25 @@ SDL_Surface* pts_peach_image(void)
 	return ptsPeachImage;
 }
 
+SDL_Surface* modearrow_image(void) //모드 선택 화살표를 반환
+{
+	return modearrow;
+}
+
 SDL_Surface* pacman_image(void)
 {
 	return pacman;
 }
 
+<<<<<<< HEAD
 SDL_Surface* pacman_image2(void)
 {
 	return pacman2player_static;
 }
 
 
+=======
+>>>>>>> game_UserInterface
 SDL_Surface *pacman_ani_image(Direction dir, int frame)
 {
 	if (frame < 0 || frame > 4)
@@ -771,29 +733,6 @@ SDL_Surface *pacman_ani_boost_image(Direction dir, int frame)
 		case Up:    return aniPacmanBoost[1][frame - 1];
 		case Right: return aniPacmanBoost[2][frame - 1];
 		case Down:  return aniPacmanBoost[3][frame - 1];
-	}
-
-	printf("incorrect enum value\naborting\n");
-	exit(1);
-}
-
-SDL_Surface *pacman_ani_bullet_image(Direction dir, int frame)
-{
-	if (frame < 0 || frame > 4)
-	{
-		printf("invalid pacman frame: %d\n", frame);
-		printf("aborting\n");
-		exit(1);
-	}
-
-	if (frame == 0) return pacman3;
-
-	switch(dir)
-	{
-		case Left:  return aniPacmanBullet[0][frame - 1];
-		case Up:    return aniPacmanBullet[1][frame - 1];
-		case Right: return aniPacmanBullet[2][frame - 1];
-		case Down:  return aniPacmanBullet[3][frame - 1];
 	}
 
 	printf("incorrect enum value\naborting\n");
@@ -882,23 +821,6 @@ SDL_Surface* get_fruit_image(Fruit fruit)
 	printf("incorrect enum value\naborting\n");
 	exit(1);
 }
-
-SDL_Surface* get_item_image(Item item)//총알아이템이미지
-{
-	switch(item)
-	{
-	case Bullet:			return bulletImage;
-	case LowVelocity:		return lowvelocityImage;
-	}
-	printf("incorrect enum value\naborting\n");
-	exit(1);
-}
-
-SDL_Surface* get_bullet_image()//총알이미지
-{
-	return item_bullet;
-}
-
 
 SDL_Surface* get_fruit_score_image(Fruit fruit)
 {
