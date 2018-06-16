@@ -10,6 +10,7 @@
 #include "fps.h"
 #include "game.h"
 #include "input.h"
+#include "item.h"
 #include "intermission.h"
 #include "imageloader.h"
 #include "menu.h"
@@ -86,12 +87,14 @@ static void internal_tick(void)
 //playmode별 실행 분기
 			if (menuSystem.action == GoToGame && mode==Single)
 			{
+				numCredits--;
 				pacmanGame.multiMode=0;
 				state = Game;
 				startgame_init();
 			}
 			else if (menuSystem.action == GoToGame && mode==Pvp)
 			{
+				numCredits--;
 				pacmanGame.multiMode=1;
 				pacmanGame.pveMode=0;
 				state = Game;
@@ -99,6 +102,7 @@ static void internal_tick(void)
 			}
 			else if (menuSystem.action == GoToGame && mode==Pve)
 			{
+				numCredits--;
 				pacmanGame.multiMode=1;
 				pacmanGame.pveMode=1;
 				state = Game;
@@ -219,78 +223,53 @@ static void key_down_hacks(int keycode)
 	static bool rateSwitch = false;
 
 	//TODO: remove this hack and try make it work with the physics body
-	if (keycode == SDLK_SPACE) fps_sethz((rateSwitch = !rateSwitch) ? 200 : 60);
+	if (keycode == SDLK_SPACE) fps_sethz((rateSwitch!=rateSwitch) ? 200 : 60);
 
-	if (keycode == SDLK_b) {
-		if(!pacmanGame.pacman.boostOn) {
+	if (keycode == SDLK_b)
+	{
+		if(!pacmanGame.pacman.boostOn)
+		{
 			pacmanGame.pacman.body.velocity = 100;
 			pacmanGame.pacman.boostOn = true;
-		} else {
+		}
+		else
+		{
 			pacmanGame.pacman.body.velocity = 80;
 			pacmanGame.pacman.boostOn = false;
 		}
 	}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 	if(pacmanGame.pacman.bulletOn==true&&pacmanGame.bullet.bullet_displaying==false&&keycode==SDLK_SLASH)//bullet모드일 경우 '/' 누르면 총알 발사
 	{
 		pacmanGame.pacman.bulletsLeft--;
 		bullet_init(&pacmanGame.bullet, &pacmanGame.pacman);
+		play_sound(BulletSound);
 	}
 
 	if(pacmanGame.pacman2.bulletOn==true&&pacmanGame.bullet2.bullet_displaying==false&&keycode==SDLK_f)
 	{
 		pacmanGame.pacman2.bulletsLeft--;
 		bullet_init(&pacmanGame.bullet2, &pacmanGame.pacman2);
-=======
-	if(pacmanGame.pacman.bulletOn==true&&pacmanGame.bullet.bullet_displaying==false&&keycode==SDLK_SLASH)//bullet모드일 경우 '/' 누르면 총알 발사
-	{
-		pacmanGame.pacman.bulletsLeft--;
-		bullet_init(&pacmanGame.bullet,&pacmanGame);
 		play_sound(BulletSound);
->>>>>>> game_Addsounds
 	}
 
-=======
->>>>>>> game_UserInterface
 	//TODO: move logic into the tick method of the menu
 	if (state == Menu && keycode == SDLK_5 && numCredits < 99)
 	{
+		play_sound(EatingPelletSound);
 		numCredits++;
 	}
-<<<<<<< HEAD
-
-	if (state == Menu && keycode == SDLK_1)
-	{
-		pacmanGame.multiMode=0;
-		pacmanGame.multiMode=0;
-		printf("Single Mode\n");
-	}
-
-	if (state == Menu && keycode == SDLK_2)
-	{
-		pacmanGame.multiMode=1;
-		pacmanGame.pveMode=0;
-		printf("MULTI MODE\n");
-	}
-
-	if (state == Menu && keycode == SDLK_3)
-	{
-		pacmanGame.multiMode=1;
-		pacmanGame.pveMode=1;
-		printf("PVE Mode\n");
-=======
     //키보드 입력에 따라 플레이 모드 바꾸기
 	if (state == Menu && numCredits!=0 && keycode == SDLK_DOWN && mode<2)
 	{
+		play_sound(GodModeSound);
 		mode++;
 	}
 
 	if (state == Menu && numCredits!=0 && keycode == SDLK_UP && mode>0)
 	{
+		play_sound(GodModeSound);
 		mode--;
->>>>>>> game_UserInterface
 	}
 
 	if (keycode == SDLK_9)

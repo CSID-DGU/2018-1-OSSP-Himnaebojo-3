@@ -6,6 +6,6 @@ Debug/game/src!main.c.o: src/main.c src/main.h SDL/SDL.h SDL/SDL_main.h \
  SDL/SDL_keysym.h SDL/SDL_mouse.h SDL/SDL_video.h SDL/SDL_joystick.h \
  SDL/SDL_quit.h SDL/SDL_loadso.h SDL/SDL_timer.h SDL/SDL_version.h \
  SDL/SDL_image.h SDL/SDL.h src/board.h src/boardloader.h src/pellet.h \
- src/fps.h src/game.h src/fruit.h src/ghost.h src/direction.h \
- src/pacman.h src/physics.h src/input.h src/intermission.h \
+ src/fps.h src/game.h src/fruit.h src/item.h src/physics.h \
+ src/direction.h src/ghost.h src/pacman.h src/input.h src/intermission.h \
  src/imageloader.h src/menu.h src/sound.h src/text.h src/window.h

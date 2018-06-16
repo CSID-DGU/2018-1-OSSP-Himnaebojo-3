@@ -220,20 +220,10 @@ void execute_red_logic(Ghost *redGhost, Pacman *pacman)
 	redGhost->targetY = rNum2;
 
 	// Red's AI is to set his target position to pacmans
-<<<<<<< HEAD
-<<<<<<< HEAD
 	if(rand()%2 - 1){
 		redGhost->targetX = pacman->body.x;
 		redGhost->targetY = pacman->body.y;
 	}
-=======
-	//redGhost->targetX = pacman->body.x;
-	//redGhost->targetY = pacman->body.y;
->>>>>>> game_UserInterface
-=======
-	redGhost->targetX = pacman->body.x;
-	redGhost->targetY = pacman->body.y;
->>>>>>> game_Addsounds
 
 	if(redGhost->isDead == 1) {death_send(redGhost);}
 }

@@ -2,6 +2,7 @@
 
 #include "board.h"
 #include "fruit.h"
+#include "item.h"
 #include "ghost.h"
 #include "pacman.h"
 #include "pellet.h"
@@ -33,11 +34,11 @@ typedef struct
 	GameState gameState;
 	unsigned int ticksSinceModeChange;
 	Pacman pacman;
+	Pacman pacman2;
 	Ghost ghosts[4];
 	Board board;
 	PelletHolder pelletHolder;
 	GameFruit gameFruit1, gameFruit2, gameFruit3, gameFruit4, gameFruit5;
-<<<<<<< HEAD
 	GameItem item[2];
 	Item_bullet bullet;
 	Item_bullet bullet2;
@@ -45,10 +46,6 @@ typedef struct
 	int currentLevel;
 	int multiMode;
 	int pveMode;
-=======
-	int highscore;
-	int currentLevel;
->>>>>>> game_UserInterface
 } PacmanGame;
 
 //Updates the game 1 tick, or 1/60th of a second.
@@ -71,7 +68,6 @@ void pacdeath_init(PacmanGame *game);
 
 //Returns the length of the given integer.
 int int_length(int num);
-<<<<<<< HEAD
 
 //void bullet_init(Item_bullet* bullet,PacmanGame* game);
 void bullet_init(Item_bullet* bullet, Pacman* pac);
@@ -82,5 +78,3 @@ void LowVelocity_item(PacmanGame *game);
 
 void PROCESS_AI(PacmanGame *game);
 void search_fruit(PacmanGame *game, int *target_x, int *target_y );
-=======
->>>>>>> game_UserInterface

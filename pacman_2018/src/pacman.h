@@ -29,6 +29,8 @@ typedef struct
 	int score;
 	bool godMode;
 	bool boostOn;
+	bool bulletOn;
+	int bulletsLeft;
 	unsigned originDt;
 	Direction lastAttemptedMoveDirection;
 	MovementType movementType;

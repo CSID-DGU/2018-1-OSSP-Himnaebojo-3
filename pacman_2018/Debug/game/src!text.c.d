@@ -6,5 +6,5 @@ Debug/game/src!text.c.o: src/text.c src/text.h SDL/SDL.h SDL/SDL_main.h \
  SDL/SDL_keysym.h SDL/SDL_mouse.h SDL/SDL_video.h SDL/SDL_joystick.h \
  SDL/SDL_quit.h SDL/SDL_loadso.h SDL/SDL_timer.h SDL/SDL_version.h \
  src/imageloader.h SDL/SDL_image.h SDL/SDL.h src/direction.h src/main.h \
- src/fruit.h src/board.h src/ghost.h src/pacman.h src/physics.h \
- src/imageutil.h
+ src/item.h src/board.h src/physics.h src/fruit.h src/ghost.h \
+ src/pacman.h src/imageutil.h

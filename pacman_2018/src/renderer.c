@@ -268,6 +268,16 @@ void draw_fruit_game(int currentLevel, GameFruit *gameFruit)
 	draw_image_coord_offset(image, gameFruit->x, gameFruit->y + 2, -5, 8);
 }
 
+void draw_item_game(GameItem* gameItem)
+{
+	//Item item=item_for_level(currentLevel);
+	Item item=gameItem->item;
+	SDL_Surface* image=get_item_image(item);
+
+	draw_image_coord_offset(image,gameItem->x,gameItem->y+2,-5,8);
+}
+
+
 //
 //
 // Pellet renderering
@@ -353,7 +363,6 @@ void draw_pacman(Pacman *pacman)
 	int xOffset = pacman->body.xOffset - 4;
 	int yOffset = offset + pacman->body.yOffset - 4;
 
-<<<<<<< HEAD
 
 	if(!pacman->boostOn)
 	{
@@ -395,15 +404,8 @@ void draw_pacman2(Pacman *pacman)
 	{
 		aniDir = pacman->body.curDir;
 		frame = animation_get_frame(50, 4);
-=======
-	if(!pacman->boostOn) {
-		draw_image_coord_offset(pacman_ani_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
-	} else {
-		draw_image_coord_offset(pacman_ani_boost_image(aniDir, frame), pacman->body.x, pacman->body.y, xOffset, yOffset);
->>>>>>> game_UserInterface
 	}
 
-<<<<<<< HEAD
 	int xOffset = pacman->body.xOffset - 4;
 	int yOffset = offset + pacman->body.yOffset - 4;
 
@@ -423,8 +425,6 @@ void draw_bullet(Item_bullet* bullet)
 	draw_image_coord_offset(get_bullet_image(),bullet->body.x,bullet->body.y+2,-5,8);
 }
 
-=======
->>>>>>> game_UserInterface
 void draw_pacman_static(Pacman *pacman)
 {
 	int xOffset = pacman->body.xOffset - 4;
@@ -469,6 +469,44 @@ void draw_pacman_death(Pacman *pacman, unsigned int dt)
 	{
 		//draw last frame
 		image = pacman_death_image(10);
+	}
+	else
+	{
+		//draw nothing
+		return;
+	}
+
+	int xOffset = pacman->body.xOffset - 4;
+	int yOffset = offset + pacman->body.yOffset - 6;
+
+	draw_image_coord_offset(image, pacman->body.x, pacman->body.y, xOffset, yOffset);
+}
+
+void draw_pacman_death2(Pacman *pacman, unsigned int dt)
+{
+
+	unsigned int hang1 = 200;
+	unsigned int perFrame = 140;
+	unsigned int hang2 = 200;
+
+	int numFrames = 11;
+
+	SDL_Surface *image;
+
+	if (dt < hang1)
+	{
+		image = pacman_death_image2(0);
+	}
+	else if (dt < (hang1 + numFrames * perFrame))
+	{
+		int i = animation_get_frame_dt(dt - hang1, perFrame, numFrames);
+
+		image = pacman_death_image2(i);
+	}
+	else if (dt < (hang1 + numFrames * perFrame + hang2))
+	{
+		//draw last frame
+		image = pacman_death_image2(10);
 	}
 	else
 	{

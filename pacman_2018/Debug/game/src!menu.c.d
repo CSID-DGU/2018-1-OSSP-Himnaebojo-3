@@ -7,4 +7,5 @@ Debug/game/src!menu.c.o: src/menu.c src/menu.h src/main.h \
  SDL/SDL_mouse.h SDL/SDL_video.h SDL/SDL_joystick.h SDL/SDL_quit.h \
  SDL/SDL_loadso.h SDL/SDL_timer.h SDL/SDL_version.h src/direction.h \
  src/ghost.h src/board.h SDL/SDL_image.h SDL/SDL.h src/pacman.h \
- src/physics.h src/renderer.h src/fruit.h src/pellet.h src/text.h
+ src/physics.h src/renderer.h src/fruit.h src/item.h src/pellet.h \
+ src/text.h

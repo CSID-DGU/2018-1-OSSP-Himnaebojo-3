@@ -6,6 +6,7 @@
 
 #include "input.h"
 #include "ghost.h"
+//#include "main.h"
 #include "renderer.h"
 
 //time till ghost-rows start appearing
