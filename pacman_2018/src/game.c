@@ -403,6 +403,9 @@ void game_render(PacmanGame *game)
 
 				//TODO: this actually draws the last frame pacman was on when he died
 				draw_pacman_static(&game->pacman);
+				if(game->multiMode){
+					draw_pacman_static2(&game->pacman2);
+				}
 
 				for (int i = 0; i < 4; i++) draw_ghost(&game->ghosts[i]);
 			}
@@ -410,7 +413,9 @@ void game_render(PacmanGame *game)
 			{
 				//draw the death animation
 				draw_pacman_death(&game->pacman, dt - 1000);
-				draw_pacman_death2(&game->pacman2, dt - 1000);
+				if(game->multiMode){
+					draw_pacman_death2(&game->pacman2, dt - 1000);
+				}
 			}
 
 			draw_large_pellets(&game->pelletHolder, true);
