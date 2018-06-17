@@ -15,7 +15,7 @@
    PVE Mode - Pacman AI와 게임 진행
     
 
-Pacman Folder : Our new Pacman (???? Lines) <br>
+Pacman Folder : Our new Pacman (6564 Lines) <br>
 - Multi Player
 - Player AI Pacman
 - Item & sound
